@@ -44,7 +44,7 @@ app.post('/register', async (req, res) => {
   
   const {username, email, password} = req.body;
    
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       email:email
     }
@@ -64,7 +64,7 @@ app.post('/register', async (req, res) => {
   const hashpassword = await bcrypt.hash(password,10)
 
   try {
-    const x = await prisma.users.create({
+    const x = await prisma.user.create({
       data: {
         email: email,
         username: username,
@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
   
   const { email, password} = req.body;
    
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       email:email
     }
@@ -119,7 +119,7 @@ app.post('/forgotPassword', async (req, res) => {
   const {email} = req.body
 
   try {
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email:email
       }
@@ -172,7 +172,7 @@ app.post('/resetPassword/:token', async (req,res) => {
     const userId = decoded.id
     const hashPassword = await bcrypt.hash(password,10)
 
-    await prisma.users.update({
+    await prisma.user.update({
       where: {
         id: userId
       },
@@ -226,7 +226,7 @@ app.delete('/delete', async (req, res) => {
   
   try {
     
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email:decoded.email
       }
@@ -236,7 +236,7 @@ app.delete('/delete', async (req, res) => {
       return res.json({status: false, message: "user not exist"})
     }
 
-    await prisma.users.delete({
+    await prisma.user.delete({
       where: {
         id:user.id,
       },
