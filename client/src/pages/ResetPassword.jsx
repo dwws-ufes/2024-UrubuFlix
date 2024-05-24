@@ -1,4 +1,3 @@
-// src/components/ResetPassword.js
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../App.css';
