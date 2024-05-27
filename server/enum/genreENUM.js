@@ -1,3 +1,4 @@
+import prisma from "../services/prisma.js";
 
 //MUDAR ISSO AQUI PRA DEIXAR CERTINHO OS TIPOS DE GENERO
 export const Genre = Object.freeze({
@@ -27,3 +28,17 @@ export function getGenreValue(genreName) {
     return Genre[genreName.toUpperCase()] || null;
 }
   
+export const initializeGenres = async () => {
+    const genreEntries = Object.entries(Genre);
+    for (const [genreName, genreId] of genreEntries) {
+        try {
+            await prisma.genre.upsert({
+                where: { id: genreId },
+                update: {},
+                create: { id: genreId, name: genreName },
+            });
+        } catch (err) {
+            console.error(`Error creating genre ${genreName}`, err);
+        }
+    }
+};

@@ -24,9 +24,9 @@ model review {
 model catalog {
   id                 Int                  @id @default(autoincrement())
   name               String               @unique(map: "name_UNIQUE") @db.VarChar(45)
-  genre              Int
   description        Int?
   catalog_has_movie  catalog_has_movie[]
+  genres             CatalogGenre[]
   users              user[]
 }
 
@@ -44,7 +44,6 @@ model catalog_has_movie {
 model movie {
   id                 Int                  @id @default(autoincrement())
   name               String               @db.VarChar(45)
-  genre              Int
   synopsis           String?              @db.Text
   total_rating       Int
   age_rating         Int?
@@ -54,7 +53,38 @@ model movie {
   duration           Int?
   reviews            review[]
   catalog_has_movie  catalog_has_movie[]
+  genres             moviegenre[]
 }
+
+model genre {
+  id    Int           @id @default(autoincrement())
+  name  String        @unique
+  movies moviegenre[]
+  catalogs CatalogGenre[]
+}
+
+model moviegenre {
+  movieId Int
+  genreId Int
+  movie   movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  genre   genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([movieId, genreId])
+  @@index([movieId])
+  @@index([genreId])
+}
+
+model CatalogGenre {
+  catalogId Int
+  genreId   Int
+  catalog   catalog @relation(fields: [catalogId], references: [id], onDelete: Cascade)
+  genre     genre   @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([catalogId, genreId])
+  @@index([catalogId])
+  @@index([genreId])
+}
+
 
 model user {
   id           Int         @id @default(autoincrement())

@@ -7,9 +7,9 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import cookieParser from 'cookie-parser';
 
-import * as userServices from './services/userServices.js';
-import * as catalogServices from './services/catalogServices.js';
-import * as movieServices from './services/movieServices.js';
+import * as userService from './services/userServices.js';
+import * as catalogService from './services/catalogServices.js';
+import * as movieService from './services/movieServices.js';
 import * as genreENUM from './enum/genreENUM.js';
 
 dotenv.config()
@@ -37,6 +37,13 @@ app.listen(PORT, async () => {
   catch (error) {
     console.error('Error connecting to the database:', error);
   }
+  try{
+    await genreENUM.initializeGenres();
+    console.log('Genres initialized');
+  }
+  catch (error){
+    console.error('Error initializing genres:', error);
+  }
 });
 
 
@@ -50,7 +57,7 @@ app.post('/register', async (req, res) => {
   }
 
   try {
-    const existingUser = await userServices.findUserByEmail(email);
+    const existingUser = await userService.findUserByEmail(email);
 
     if (existingUser) {
       console.log('User already existed');

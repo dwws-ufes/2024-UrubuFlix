@@ -2,13 +2,19 @@ import prisma from "./prisma.js";
 import * as genreENUM from "../enum/genreENUM.js";
 
 export const createCatalog = async (data) => {
-    const { name, genre} = data;
-    const genreValue = genreENUM.getGenreValue(genre);
+    const { name, genres } = data;
+    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
+
     try {
         const catalog = await prisma.catalog.create({
             data: {
                 name: name,
-                genre: genreValue
+                genres: {
+                    connectOrCreate: genreValues.map(genreId => ({
+                        where: { id: genreId },
+                        create: { id: genreId }
+                    }))
+                }
             },
         });
         return catalog;
@@ -33,22 +39,30 @@ export const setName = async (id, name) => {
     }
 };
 
-export const setGenre = async (id, genre) => {
+export const setGenres = async (id, genres) => {
+    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
+
     try {
         const catalog = await prisma.catalog.update({
             where: { id: id },
             data: {
-                genre: genreENUM.getGenreValue(genre),
+                genres: {
+                    set: [],  // clear existing genres
+                    connectOrCreate: genreValues.map(genreId => ({
+                        where: { id: genreId },
+                        create: { id: genreId }
+                    }))
+                }
             },
         });
         return catalog;
     } catch (err) {
-        console.error('Error setting genre', err);
-        throw new Error('Error setting genre');
+        console.error('Error setting genres', err);
+        throw new Error('Error setting genres');
     }
 };
 
-export const setdescription = async (id, description) => {
+export const setDescription = async (id, description) => {
     try {
         const catalog = await prisma.catalog.update({
             where: { id: id },
