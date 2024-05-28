@@ -191,3 +191,60 @@ export const findMovieByTitle = async (title) => {
         throw new Error('Error finding movie');
     }
 };
+
+export const deleteMovie = async (id) => {
+    try {
+        const movie = await prisma.movie.delete({
+            where: { id: id },
+        });
+        return movie;
+    } catch (err) {
+        console.error('Error deleting movie', err);
+        throw new Error('Error deleting movie');
+    }
+};
+
+import prisma from '../services/prisma.js';
+import * as genreENUM from './enum/genreENUM.js';
+
+
+export const createFullMovieCSV = async (data) => {
+    const {
+        Title, Rated, Released, Runtime, Genre, Director, Plot, Poster, Ratings, Trailer
+    } = data;
+
+    // Calcular total_rating a partir das Ratings
+    const totalRating = Ratings.reduce((sum, rating) => {
+        const value = parseFloat(rating.Value.replace(/[^0-9.]/g, ''));
+        return sum + value;
+    }, 0) / Ratings.length;
+
+    // Dividir Genre em valores separados por vírgula e mapear para IDs
+    const genreValues = Genre.split(',').map(genre => genre.trim()).map(genreENUM.getGenreValue);
+
+    try {
+        const movie = await prisma.movie.create({
+            data: {
+                name: Title,
+                age_rating: Rated,
+                release_date: new Date(Released),
+                duration: parseInt(Runtime),
+                director: Director,
+                synopsis: Plot,
+                poster: Poster,
+                total_rating: totalRating,
+                trailer: Trailer,
+                genres: {
+                    connectOrCreate: genreValues.map(genreId => ({
+                        where: { id: genreId },
+                        create: { id: genreId, name: genreENUM.getGenreName(genreId) }
+                    }))
+                },
+            },
+        });
+        return { status: true, message: 'Movie created successfully', movie };
+    } catch (err) {
+        console.error('Movie not created', err);
+        throw new Error('Movie not created');
+    }
+}
