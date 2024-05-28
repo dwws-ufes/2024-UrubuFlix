@@ -5,10 +5,9 @@ import * as catalogServices from "./catalogServices.js";
 export const createUser = async (data) => {
     const { username, email, password } = data;
     const hashPassword = await bcrypt.hash(password, 10);
-  
     try {
-        const catalog = await catalogServices.createCatalog({ name: `${username}'s favorites`, genre: 'PLACEHOLDER' });
-        
+        const catalog = await catalogServices.createCatalog({ name: `${username}'s favorites`, genre: 'PLACEHOLDER', genres : [] });
+
         const user = await prisma.user.create({
         data: {
           email: email,
@@ -26,7 +25,7 @@ export const createUser = async (data) => {
     }
   };
 
-  export const findUserByEmail = async (email) => {
+export const findUserByEmail = async (email) => {
     try {
       const user = await prisma.user.findFirst({
         where: { email: email },

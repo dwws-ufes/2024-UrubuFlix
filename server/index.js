@@ -55,10 +55,11 @@ app.post('/register', async (req, res) => {
     console.log('Por favor, preencha todos os campos');
     return res.json({ status: false, message: 'Empty campo' });
   }
-
+  
   try {
+    
     const existingUser = await userServices.findUserByEmail(email);
-
+    
     if (existingUser) {
       console.log('User already existed');
       return res.json({ status: false, message: 'User already existed' });

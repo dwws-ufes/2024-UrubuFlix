@@ -2,9 +2,9 @@ import prisma from "./prisma.js";
 import * as genreENUM from "../enum/genreENUM.js";
 
 export const createCatalog = async (data) => {
-    const { name, genres } = data;
+    const { name, genres, genre } = data;
     const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
-
+   
     try {
         const catalog = await prisma.catalog.create({
             data: {

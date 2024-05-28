@@ -204,10 +204,6 @@ export const deleteMovie = async (id) => {
     }
 };
 
-import prisma from '../services/prisma.js';
-import * as genreENUM from './enum/genreENUM.js';
-
-
 export const createFullMovieCSV = async (data) => {
     const {
         Title, Rated, Released, Runtime, Genre, Director, Plot, Poster, Ratings, Trailer
