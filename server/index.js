@@ -1,11 +1,12 @@
-import express from 'express'; // Importa o módulo express
-import cors from 'cors'; // Importa o módulo cors
+import express from 'express' 
+import cors from 'cors' 
 import bcrypt from 'bcrypt'
-import prisma from './services/prisma.js';
+import prisma from './services/prisma.js'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
-import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser'
+import fs from 'fs'
 
 import * as userServices from './services/userServices.js';
 import * as catalogServices from './services/catalogServices.js';
@@ -108,6 +109,7 @@ app.post('/login', async (req, res) => {
 
 });
 
+//forgot password
 app.post('/forgotPassword', async (req, res) => {
   const {email} = req.body
 
@@ -160,7 +162,6 @@ app.post('/resetPassword/:token', async (req,res) => {
   const {password} = req.body;
 
   try {
-    //tem que verificar se o token expirou
     const decoded =  jwt.verify(token,process.env.KEY)
     const userId = decoded.id
     const hashPassword = await bcrypt.hash(password,10)
@@ -170,11 +171,10 @@ app.post('/resetPassword/:token', async (req,res) => {
         id: userId
       },
       data: {
-        password: hashPassword // Atualizar o campo de senha
+        password: hashPassword 
       }
     });
 
-    //console.log(user.data);
     res.json({status: true, message: "ok"})
 
   }catch (err) {
@@ -183,6 +183,7 @@ app.post('/resetPassword/:token', async (req,res) => {
   }
 })
 
+//verifica se usuario está logado
 const verifyUser = async (req, res, next) => {
   
   try {
@@ -244,3 +245,23 @@ app.delete('/delete', async (req, res) => {
   }
   
 })
+
+//===================// read file movies //===================//
+const filePath = './script_movies/movies.json'
+
+app.get('/films', (req, res) => {
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Erro ao ler o arquivo:', err);
+      res.status(500).send('Erro ao ler o arquivo');
+      return;
+    }
+    try {
+      const jsonData = JSON.parse(data);
+      res.json(jsonData); 
+    } catch (err) {
+      console.error('Erro ao analisar JSON:', err);
+      res.status(500).send('Erro ao analisar JSON');
+    }
+  });
+});
