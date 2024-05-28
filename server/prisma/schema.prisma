@@ -48,6 +48,7 @@ model movie {
   total_rating       Int
   age_rating         Int?
   trailer            String?              @db.VarChar(250)
+  poster             String?              @db.VarChar(250)
   release_date       DateTime?            @db.Date
   director           String?              @db.VarChar(100)
   duration           Int?
