@@ -1,15 +1,16 @@
 import express from 'express'; // Importa o módulo express
 import cors from 'cors'; // Importa o módulo cors
 import bcrypt from 'bcrypt'
-import { PrismaClient } from '@prisma/client'
+import prisma from './services/prisma.js';
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import cookieParser from 'cookie-parser';
 
-
-
-const prisma = new PrismaClient()
+import * as userServices from './services/userServices.js';
+import * as catalogServices from './services/catalogServices.js';
+import * as movieServices from './services/movieServices.js';
+import * as genreENUM from './enum/genreENUM.js';
 
 dotenv.config()
 const app = express()
@@ -36,49 +37,40 @@ app.listen(PORT, async () => {
   catch (error) {
     console.error('Error connecting to the database:', error);
   }
+  try{
+    await genreENUM.initializeGenres();
+    console.log('Genres initialized');
+  }
+  catch (error) {
+    console.error('Error initializing genres:', error);
+  }
 });
 
 
 //Register 
 app.post('/register', async (req, res) => {
-  
-  const {username, email, password} = req.body;
-   
-  const user = await prisma.users.findFirst({
-    where: {
-      email:email
-    }
-  });
-  
-
-  if (user) {
-    console.log('user already existed');
-    return res.json({status: false,message: 'user already existed'})
-  }
+  const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     console.log('Por favor, preencha todos os campos');
-    return res.json({status: false,message: 'Empty campo'})
+    return res.json({ status: false, message: 'Empty campo' });
   }
-  
-  const hashpassword = await bcrypt.hash(password,10)
 
   try {
-    const x = await prisma.users.create({
-      data: {
-        email: email,
-        username: username,
-        password: hashpassword,
-      }
-    });
-    console.log('User created successfully');
-    res.send({ status: true, message: 'User created successfully' });
-  }
-  catch (err ){
-    console.log('User not created');
-    res.send({ status: false, message: 'User not created' });
-  }
+    const existingUser = await userServices.findUserByEmail(email);
 
+    if (existingUser) {
+      console.log('User already existed');
+      return res.json({ status: false, message: 'User already existed' });
+    }
+
+    const user = await userServices.createUser({ username, email, password });
+    return res.json(user);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ status: false, message: 'Internal Server Error' });
+  }
 });
 
 //Login 
@@ -86,7 +78,7 @@ app.post('/login', async (req, res) => {
   
   const { email, password} = req.body;
    
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       email:email
     }
@@ -119,7 +111,7 @@ app.post('/forgotPassword', async (req, res) => {
   const {email} = req.body
 
   try {
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email:email
       }
@@ -172,7 +164,7 @@ app.post('/resetPassword/:token', async (req,res) => {
     const userId = decoded.id
     const hashPassword = await bcrypt.hash(password,10)
 
-    await prisma.users.update({
+    await prisma.user.update({
       where: {
         id: userId
       },
@@ -226,7 +218,7 @@ app.delete('/delete', async (req, res) => {
   
   try {
     
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email:decoded.email
       }
@@ -236,7 +228,7 @@ app.delete('/delete', async (req, res) => {
       return res.json({status: false, message: "user not exist"})
     }
 
-    await prisma.users.delete({
+    await prisma.user.delete({
       where: {
         id:user.id,
       },
