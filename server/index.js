@@ -50,11 +50,16 @@ app.listen(PORT, async () => {
 
 //Register 
 app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, confirmPassword } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !confirmPassword) {
     console.log('Por favor, preencha todos os campos');
     return res.json({ status: false, message: 'Empty campo' });
+  }
+
+  if (password !== confirmPassword) {
+    console.log('As senhas não correspondem');
+    return res.json({ status: false, message: 'As senhas não correspondem' });
   }
   
   try {

@@ -9,6 +9,7 @@ function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -16,17 +17,13 @@ function Register() {
     e.preventDefault();
 
     try {
-      console.log(username,email,password);
-      const response = await register(username, email, password);
+      const response = await register(username, email, password, confirmPassword);
       if (response.status) {
         alert('Account created successfully!');
         navigate('/');
-      } 
-      else if (!response.status && response.message === 'user already existed') {
-        alert('Account already created, try again');
-      } 
-      else {
-        alert('Some information is incorrect\nTry again');
+      } else {
+        // Se o status for false, exiba a mensagem de erro
+        alert(response.message);
       }
     } catch (err) {
       console.log(err);
@@ -39,25 +36,15 @@ function Register() {
         <img src={logo} alt="urubuflix" />
         <h2>Register</h2>
         <label htmlFor='username'>Username :</label>
-        <input
-          type='text'
-          placeholder='Enter Username'
-          onChange={(event) => setUsername(event.target.value)}
-        />
+        <input type='text' id='username' required onChange={(e) => setUsername(e.target.value)} />
         <label htmlFor='email'>Email :</label>
-        <input
-          type='email'
-          placeholder='Enter Email'
-          onChange={(event) => setEmail(event.target.value)}
-        />
+        <input type='email' id='email' required onChange={(e) => setEmail(e.target.value)} />
         <label htmlFor='password'>Password :</label>
-        <input
-          type='password'
-          placeholder='******'
-          onChange={(event) => setPassword(event.target.value)}
-        />
+        <input type='password' id='password' required onChange={(e) => setPassword(e.target.value)} />
+        <label htmlFor='confirmPassword'>Confirm Password :</label>
+        <input type='password' id='confirmPassword' required onChange={(e) => setConfirmPassword(e.target.value)} />
         <button type='submit'>Register</button>
-        <p>Have an Account? <Link to="/login">Login</Link></p>
+        <Link to='/'>Already have an account?</Link>
       </form>
     </div>
   );
