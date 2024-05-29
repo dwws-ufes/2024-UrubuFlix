@@ -5,6 +5,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { verifyUser } from '../services/Axios';
 import urubuUser from '../assets/urubu.png';
 import Films from './Films';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+
 
 function Home() {
   const navigate =  useNavigate()
@@ -62,9 +65,9 @@ function Home() {
                   <input type="text" placeholder="Pesquisar um filme..." alt="Digite aqui um filme para pesquisar" />
                 </fieldset>
                 <fieldset className="btn-pesquisar conteudo-flex">
-                  <button type="button" title="Pesquisar">
-                    <span className="fas fa-search"></span>
-                  </button>
+                <button type="button" title="Pesquisar" className="search-button">
+                  <FontAwesomeIcon icon={faSearch} />
+                </button>
                 </fieldset>
               </form>
             </div>

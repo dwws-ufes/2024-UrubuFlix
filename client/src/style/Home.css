@@ -7,8 +7,8 @@
 }
 
 body {
-  background-color: #1C1C1C; /* Um cinza escuro */
-  color: #FFFFFF; /* Cor do texto para contraste */
+  background-color: #1C1C1C; 
+  color: #FFFFFF; 
   background-size: cover;
   background-attachment: fixed;
   font-family: 'PT Sans', sans-serif;
@@ -121,13 +121,23 @@ fieldset {
   outline: 0;
 }
 
-.btn-pesquisar {
-  width: 5%;
-  background-color: #fff;
+.search-button {
+  background-color: transparent;
+  border: none;
+  color: #1C1C1C;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition-duration: 0.4s;
 }
 
-.btn-pesquisar button{
-  color: #585858;
+.search-button:hover {
+  background-color: #1C1C1C;
+  color: white;
 }
 
 button {
