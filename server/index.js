@@ -256,16 +256,16 @@ const filePath = './script_movies/movies.json'
 app.get('/films', (req, res) => {
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
-      console.error('Erro ao ler o arquivo:', err);
-      res.status(500).send('Erro ao ler o arquivo');
+      console.error('Error reading file:', err);
+      res.status(500).send('Error reading file');
       return;
     }
     try {
       const jsonData = JSON.parse(data);
       res.json(jsonData); 
     } catch (err) {
-      console.error('Erro ao analisar JSON:', err);
-      res.status(500).send('Erro ao analisar JSON');
+      console.error('Error parsing JSON:', err);
+      res.status(500).send('Error parsing JSON');
     }
   });
 });

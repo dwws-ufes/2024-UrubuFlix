@@ -43,29 +43,29 @@ function Home() {
   
   return (
     <div className="App">
-      <header className="topo conteudo-flex">
-        <div className="topo-esquerdo conteudo-flex">
-          <div className="topo-logo">
-            <img src={logo} alt="Imagem logotipo do UrubuFlix" title="Imagem logotipo do UrubuFlix" />
+      <header className="top flex-content">
+        <div className="top-left flex-content">
+          <div className="top-logo">
+            <img src={logo} alt="UrubuFlix logo" title="UrubuFlix logo" />
           </div>
         </div>
-        <div className="topo-centro conteudo-flex">
+        <div className="top-center flex-content">
           <nav>
-            <ul className="topo-menu conteudo-flex">
+            <ul className="top-menu flex-content">
               <li><Link to='/'>Home</Link></li>
               <li><Link to='/'>Movies</Link></li>
               <li><Link to='/'>Category</Link></li>
               {user ? <li><Link to='/'>Favorite</Link></li> : <p></p>}
             </ul>
           </nav>
-          <div className="topo-pesquisa">
-            <div className="conteudo-pesquisa">
-              <form className="conteudo-flex" method="post">
-                <fieldset className="bar-pesquisa">
-                  <input type="text" placeholder="Pesquisar um filme..." alt="Digite aqui um filme para pesquisar" />
+          <div className="top-search">
+            <div className="content-search">
+              <form className="flex-content" method="post">
+                <fieldset className="search-bar">
+                  <input type="text" placeholder="Search for a movie..." alt="Enter a movie to search here" />
                 </fieldset>
-                <fieldset className="btn-pesquisar conteudo-flex">
-                <button type="button" title="Pesquisar" className="search-button">
+                <fieldset className="flex-content">
+                <button type="button" title="Search" className="search-button">
                   <FontAwesomeIcon icon={faSearch} />
                 </button>
                 </fieldset>
@@ -74,68 +74,68 @@ function Home() {
           </div>
         </div>
         
-        {user ? <Link to='/user'><img src={urubuUser} alt="urubuflix" className='test'/></Link> : 
-        <div className="topo-direito">
+        {user ? <Link to='/user'><img src={urubuUser} alt="urubuflix"/></Link> : 
+        <div className="top-right">
           <div className="sublogin">
             <div>
               <button className="subloginbtn">Login <br />or Register <span className="fa fa-caret-down"></span></button>
             </div>
-            <div className="sublogin-conteudo">
-              <button type="button" title="Entrar" onClick={handleLogin}>Login</button>
+            <div className="sublogin-content">
+              <button type="button" title="Login" onClick={handleLogin}>Login</button>
               <p>or</p>
-              <button type="button" title="Cadastrar" onClick={handleRegister}>Register</button>
+              <button type="button" title="Register" onClick={handleRegister}>Register</button>
             </div>
           </div>
         </div>
         }
       </header>
 
-      <main className="conteudo-principal">
+      <main className="main-content">
         <div className='films'>
           <Films></Films>
         </div>
       
-        <div className="primeiro-h1">
-          <h1>O melhor site de review de filmes</h1>
+        <div className="title">
+          <h1>The best movie review site</h1>
         </div>
 
-        <div className="dados-empresa">
+        <div className="about-website">
           <div>
-            <h1>Você sabe o que é o UrubuFlix?</h1>
+            <h1>Do you know what UrubuFlix is?</h1>
           </div>
           <div>
             <p>
-              UrubuFlix é um serviço de review de filmes, possibilitando você avaliar e comentar sobre os filmes que assistiu.
+              UrubuFlix is ​​a film review service, allowing you to rate and comment on the films you have watched.
             </p>
           </div>
           <div>
             <p>
-              Você pode desfrutar de todas essas funcionalidades:
+              You can enjoy all these features:
             </p>
           </div>
-          <div className="caixa-vantagens">
+          <div className="benefit-box">
             <div>
-              <h2>Pesquisar filmes</h2>
+              <h2>Search movies</h2>
               <p>
-                Pesquise por filmes que deseja assistir. Você pode pesquisar por nome, categoria, atores, diretores e muito mais.
+                Search for movies you want to watch. You can search by name, category, actors, directors and more.
               </p>
             </div>
             <div>
-              <h2>Avalie o filme que você assistiu</h2>
+              <h2>Rate the movie you watched</h2>
               <p>
-                Dê sua nota e comente sobre o filme que você assistiu. Compartilhe sua opinião com outros usuários.
+                Give your rating and comment on the film you watched. Share your opinion with other users.
               </p>
             </div>
             <div>
-              <h2>Favorite seus filmes preferidos</h2>
+              <h2>Favorite your favorite movies</h2>
               <p>
-                Adicione os filmes que você mais gostou em sua lista de favoritos. Assim, todos os filmes que você mais gostou estarão em um só lugar.
+                Add the movies you liked most to your favorites list. This way, all the films you liked most will be in one place.
               </p>
             </div>
             <div>
-              <h2>Volte quando desejar</h2>
+              <h2>Come back whenever you want</h2>
               <p>
-                Quando sentir saudade e assinar novamente, o seu perfil será reativado com todo seu histórico e lista.
+                When you miss it and sign up again, your profile will be reactivated with your entire history and list.
               </p>
             </div>
           </div>
@@ -143,9 +143,9 @@ function Home() {
       </main>
 
       <footer>
-        <div className="site-map conteudo-flex">
+        <div className="site-map flex-content">
           <div>
-            <img src={logo} alt="Imagem logotipo do UrubuFlix" title="Imagem logotipo do UrubuFlix" />
+            <img src={logo} alt="UrubuFLix logo" title="UrubuFLix logo" />
           </div>
         </div>
       </footer>
