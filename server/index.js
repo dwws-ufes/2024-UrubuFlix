@@ -53,13 +53,13 @@ app.post('/register', async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
   if (!username || !email || !password || !confirmPassword) {
-    console.log('Por favor, preencha todos os campos');
-    return res.json({ status: false, message: 'Empty campo' });
+    console.log('Please fill in all fields');
+    return res.json({ status: false, message: 'Empty field' });
   }
 
   if (password !== confirmPassword) {
-    console.log('As senhas não correspondem');
-    return res.json({ status: false, message: 'As senhas não correspondem' });
+    console.log('Passwords do not match');
+    return res.json({ status: false, message: 'Passwords do not match' });
   }
   
   try {
@@ -90,18 +90,17 @@ app.post('/login', async (req, res) => {
       email:email
     }
   });
-  
+
+  if ( !email || !password) {
+    console.log('Please fill in all fields');
+    return res.json({status: false,message: 'Empty field'})
+  }
 
   if (!user) {
     console.log('user is not registered');
     return res.json({status: false,message: 'user is not registered'})
   }
 
-  if ( !email || !password) {
-    console.log('Por favor, preencha todos os campos');
-    return res.json({status: false,message: 'Empty campo'})
-  }
-  
   const validPassword = await bcrypt.compare(password,user.password)
 
   if (!validPassword){
