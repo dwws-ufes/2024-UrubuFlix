@@ -91,7 +91,10 @@ function Home() {
       </header>
 
       <main className="conteudo-principal">
-        <Films></Films>
+        <div className='films'>
+          <Films></Films>
+        </div>
+      
         <div className="primeiro-h1">
           <h1>O melhor site de review de filmes</h1>
         </div>

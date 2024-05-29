@@ -234,6 +234,14 @@ button {
   filter: brightness(120%);
 }
 
+.films {
+  padding-top: 100px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+}
+
 .primeiro-h1 {
   padding-top: 130px;
   padding-bottom: 3%;
