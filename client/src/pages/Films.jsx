@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Axios from 'axios'
+import '../style/Films.css'
 
 function Films() {
-  const navigate =  useNavigate()
   const [film, setFilms] = useState([])
 
   
@@ -13,17 +12,18 @@ function Films() {
       if (res.data) {
         setFilms(res.data)
       }else {
-        //navigate('/')
-        console.log('algum erro');
+        console.log(error);
       }
-      
     })
   },[])
 
   return (
-    <div>
+    <div className="film-grid">
       {film.map(film => (
-        <li key={film.Title}>{film.Title}</li>
+        <div key={film.Title} className="film-card">
+          <img src={film.Poster} alt={film.Title} />
+          <h2>{film.Title}</h2>
+        </div>
       ))}
     </div>
   )

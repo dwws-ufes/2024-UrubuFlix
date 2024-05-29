@@ -4,6 +4,7 @@ import logo from '../assets/urubuflix.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { verifyUser } from '../services/Axios';
 import urubuUser from '../assets/urubu.png';
+import Films from './Films';
 
 function Home() {
   const navigate =  useNavigate()
@@ -87,6 +88,7 @@ function Home() {
       </header>
 
       <main className="conteudo-principal">
+        <Films></Films>
         <div className="primeiro-h1">
           <h1>O melhor site de review de filmes</h1>
         </div>
