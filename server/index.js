@@ -1,15 +1,17 @@
-import express from 'express'; // Importa o módulo express
-import cors from 'cors'; // Importa o módulo cors
+import express from 'express' 
+import cors from 'cors' 
 import bcrypt from 'bcrypt'
-import { PrismaClient } from '@prisma/client'
+import prisma from './services/prisma.js'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
-import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser'
+import fs from 'fs'
 
-
-
-const prisma = new PrismaClient()
+import * as userServices from './services/userServices.js';
+import * as catalogServices from './services/catalogServices.js';
+import * as movieServices from './services/movieServices.js';
+import * as genreENUM from './enum/genreENUM.js';
 
 dotenv.config()
 const app = express()
@@ -36,49 +38,46 @@ app.listen(PORT, async () => {
   catch (error) {
     console.error('Error connecting to the database:', error);
   }
+  try{
+    await genreENUM.initializeGenres();
+    console.log('Genres initialized');
+  }
+  catch (error) {
+    console.error('Error initializing genres:', error);
+  }
 });
 
 
 //Register 
 app.post('/register', async (req, res) => {
-  
-  const {username, email, password} = req.body;
-   
-  const user = await prisma.user.findFirst({
-    where: {
-      email:email
-    }
-  });
-  
+  const { username, email, password, confirmPassword } = req.body;
 
-  if (user) {
-    console.log('user already existed');
-    return res.json({status: false,message: 'user already existed'})
+  if (!username || !email || !password || !confirmPassword) {
+    console.log('Please fill in all fields');
+    return res.json({ status: false, message: 'Empty field' });
   }
 
-  if (!username || !email || !password) {
-    console.log('Por favor, preencha todos os campos');
-    return res.json({status: false,message: 'Empty campo'})
+  if (password !== confirmPassword) {
+    console.log('Passwords do not match');
+    return res.json({ status: false, message: 'Passwords do not match' });
   }
   
-  const hashpassword = await bcrypt.hash(password,10)
-
   try {
-    const x = await prisma.user.create({
-      data: {
-        email: email,
-        username: username,
-        password: hashpassword,
-      }
-    });
-    console.log('User created successfully');
-    res.send({ status: true, message: 'User created successfully' });
-  }
-  catch (err ){
-    console.log('User not created');
-    res.send({ status: false, message: 'User not created' });
-  }
+    
+    const existingUser = await userServices.findUserByEmail(email);
+    
+    if (existingUser) {
+      console.log('User already existed');
+      return res.json({ status: false, message: 'User already existed' });
+    }
 
+    const user = await userServices.createUser({ username, email, password });
+    return res.json(user);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ status: false, message: 'Internal Server Error' });
+  }
 });
 
 //Login 
@@ -91,18 +90,17 @@ app.post('/login', async (req, res) => {
       email:email
     }
   });
-  
+
+  if ( !email || !password) {
+    console.log('Please fill in all fields');
+    return res.json({status: false,message: 'Empty field'})
+  }
 
   if (!user) {
     console.log('user is not registered');
     return res.json({status: false,message: 'user is not registered'})
   }
 
-  if ( !email || !password) {
-    console.log('Por favor, preencha todos os campos');
-    return res.json({status: false,message: 'Empty campo'})
-  }
-  
   const validPassword = await bcrypt.compare(password,user.password)
 
   if (!validPassword){
@@ -115,6 +113,7 @@ app.post('/login', async (req, res) => {
 
 });
 
+//forgot password
 app.post('/forgotPassword', async (req, res) => {
   const {email} = req.body
 
@@ -167,7 +166,6 @@ app.post('/resetPassword/:token', async (req,res) => {
   const {password} = req.body;
 
   try {
-    //tem que verificar se o token expirou
     const decoded =  jwt.verify(token,process.env.KEY)
     const userId = decoded.id
     const hashPassword = await bcrypt.hash(password,10)
@@ -177,11 +175,10 @@ app.post('/resetPassword/:token', async (req,res) => {
         id: userId
       },
       data: {
-        password: hashPassword // Atualizar o campo de senha
+        password: hashPassword 
       }
     });
 
-    //console.log(user.data);
     res.json({status: true, message: "ok"})
 
   }catch (err) {
@@ -190,6 +187,7 @@ app.post('/resetPassword/:token', async (req,res) => {
   }
 })
 
+//verifica se usuario está logado
 const verifyUser = async (req, res, next) => {
   
   try {
@@ -251,3 +249,23 @@ app.delete('/delete', async (req, res) => {
   }
   
 })
+
+//===================// read file movies //===================//
+const filePath = './script_movies/movies.json'
+
+app.get('/films', (req, res) => {
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      res.status(500).send('Error reading file');
+      return;
+    }
+    try {
+      const jsonData = JSON.parse(data);
+      res.json(jsonData); 
+    } catch (err) {
+      console.error('Error parsing JSON:', err);
+      res.status(500).send('Error parsing JSON');
+    }
+  });
+});

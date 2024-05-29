@@ -48,3 +48,6 @@ npm run dev
 
 -- prisma (push db)
 npx prisma db push
+
+-- script dos movies 
+npm run codar_movies

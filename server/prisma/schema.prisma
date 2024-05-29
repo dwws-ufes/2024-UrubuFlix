@@ -14,7 +14,7 @@ model review {
   comment    String?  @db.Text
   movie_id   Int
   user_id    Int
-  movie      movie    @relation(fields: [movie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_review_movie1")
+  movie      movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_review_movie1")
   user       user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_review_user1")
 
   @@index([movie_id], map: "fk_review_movie1_idx")
@@ -24,17 +24,17 @@ model review {
 model catalog {
   id                 Int                  @id @default(autoincrement())
   name               String               @unique(map: "name_UNIQUE") @db.VarChar(45)
-  genre              Int
   description        Int?
   catalog_has_movie  catalog_has_movie[]
+  genres             CatalogGenre[]
   users              user[]
 }
 
 model catalog_has_movie {
   catalog_id Int
   movie_id   Int
-  catalog    catalog @relation(fields: [catalog_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_catalog_has_movie_catalog1")
-  movie      movie   @relation(fields: [movie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_catalog_has_movie_movie1")
+  catalog    catalog @relation(fields: [catalog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_catalog_has_movie_catalog1")
+  movie      movie   @relation(fields: [movie_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_catalog_has_movie_movie1")
 
   @@id([catalog_id, movie_id])
   @@index([catalog_id], map: "fk_catalog_has_movie_catalog1_idx")
@@ -44,16 +44,46 @@ model catalog_has_movie {
 model movie {
   id                 Int                  @id @default(autoincrement())
   name               String               @db.VarChar(45)
-  genre              Int
   synopsis           String?              @db.Text
   total_rating       Int
   age_rating         Int?
   trailer            String?              @db.VarChar(250)
+  poster             String?              @db.VarChar(250)
   release_date       DateTime?            @db.Date
   director           String?              @db.VarChar(100)
   duration           Int?
   reviews            review[]
   catalog_has_movie  catalog_has_movie[]
+  genres             moviegenre[]
+}
+
+model genre {
+  id    Int           @id @default(autoincrement())
+  name  String        @unique
+  movies moviegenre[]
+  catalogs CatalogGenre[]
+}
+
+model moviegenre {
+  movieId Int
+  genreId Int
+  movie   movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  genre   genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([movieId, genreId])
+  @@index([movieId])
+  @@index([genreId])
+}
+
+model CatalogGenre {
+  catalogId Int
+  genreId   Int
+  catalog   catalog @relation(fields: [catalogId], references: [id], onDelete: Cascade)
+  genre     genre   @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([catalogId, genreId])
+  @@index([catalogId])
+  @@index([genreId])
 }
 
 model user {
@@ -64,7 +94,7 @@ model user {
   catalog_id   Int
   date_joined  DateTime    @default(now()) @db.Timestamp(0)
   reviews      review[]
-  catalog      catalog     @relation(fields: [catalog_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_catalog")
+  catalog      catalog     @relation(fields: [catalog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_catalog")
 
   @@index([catalog_id], map: "fk_user_catalog_idx")
 }

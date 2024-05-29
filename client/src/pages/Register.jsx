@@ -9,6 +9,7 @@ function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -16,15 +17,19 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await register(username, email, password);
-
+      console.log(username,email,password, confirmPassword);
+      const response = await register(username, email, password, confirmPassword);
       if (response.status) {
         alert('Account created successfully!');
         navigate('/');
       } 
       else if (!response.status && response.message === 'user already existed') {
         alert('Account already created, try again');
-      } 
+      } else if (!response.status && response.message === 'Passwords do not match') {
+        alert('Passwords do not match');
+      } else if (!response.status && response.message === 'Empty field') {
+        alert('Please fill in all fields');
+      }
       else {
         alert('Some information is incorrect\nTry again');
       }
@@ -55,6 +60,12 @@ function Register() {
           type='password'
           placeholder='******'
           onChange={(event) => setPassword(event.target.value)}
+        />
+        <label htmlFor='confirmPassword'>Confirm your password :</label>
+        <input
+          type='password'
+          placeholder='******'
+          onChange={(event) => setConfirmPassword(event.target.value)}
         />
         <button type='submit'>Register</button>
         <p>Have an Account? <Link to="/login">Login</Link></p>
