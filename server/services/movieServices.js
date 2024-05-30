@@ -9,22 +9,14 @@ const isValidDate = (dateString) => {
 
 export const createMovie = async (data) => {
     const { name, genres } = data;
-    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
-    const genreValues = genreEntities.map(genre => genre.name);
-
     try {
         const movie = await prisma.movie.create({
             data: {
                 name: name,
                 total_rating: 0,
-                genres: {
-                    connectOrCreate: genreValues.map(genreName => ({
-                        where: { name: genreName },
-                        create: { name: genreName}
-                    }))
-                },
             },
         });
+        await setGenres(movie.id, genres);
         return { status: true, message: 'Movie created successfully', movie };
     } catch (err) {
         console.error('Movie not created', err);
@@ -49,17 +41,17 @@ export const setName = async (id, name) => {
 
 export const setGenres = async (id, genres) => {
     const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
-    const genreValues = genreEntities.map(genre => genre.name);
-
+   
     try {
         const movie = await prisma.movie.update({
             where: { id: id },
             data: {
                 genres: {
                     set: [],  // clear existing genres
-                    connectOrCreate: genreValues.map(genreName => ({
-                        where: { name: genreName },
-                        create: { name: genreName}
+                    create: genreEntities.map(genre => ({
+                        genre: {
+                            connect: { id: genre.id }
+                        }
                     }))
                 },
             },
@@ -250,18 +242,7 @@ export const createFullMovie = async (data) => {
                 poster: poster,
             },
         });
-        await prisma.movie.update({
-            where: { id: movie.id },
-            data: {
-                genres: {
-                    create: genreEntities.map(genre => ({
-                        genre: {
-                            connect: { id: genre.id }
-                        }
-                    }))
-                }
-            }
-        });
+        await setGenres(movie.id, genres);
         if (isValidDate(release_date)) {
             await prisma.movie.update({
                 where: { id: movie.id },
@@ -277,6 +258,8 @@ export const createFullMovie = async (data) => {
         throw new Error('Movie not created');
     }
 };
+
+
 export const updateRating = async (id) => {
     
     const reviews = await reviewServices.findReviewByMovie(id);
