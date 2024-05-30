@@ -18,9 +18,9 @@ const FilmDetails = () => {
   },[])
 
   function extractVideoId(url) {
-    var videoId = url.split('v=')[1];
-    var ampersandPosition = videoId.indexOf('&');
-    if(ampersandPosition != -1) {
+    let videoId = url.split('v=')[1];
+    let ampersandPosition = videoId.indexOf('&');
+    if (ampersandPosition !== -1) {
       videoId = videoId.substring(0, ampersandPosition);
     }
     return videoId;
@@ -47,7 +47,7 @@ const FilmDetails = () => {
       </div>
 
 
-      <div className='movie-trailer'>
+    <div className='movie-trailer'>
       <iframe src={`https://www.youtube.com/embed/${extractVideoId(film.trailer)}`} title="Movie Trailer"></iframe>
     </div>
 
