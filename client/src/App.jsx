@@ -6,7 +6,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Films from './pages/Films'
 import User from './pages/User'
-
+import FilmDetails from './pages/FilmDetails'
 
 function App() {
 
@@ -20,6 +20,7 @@ function App() {
         <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
         <Route path='/films' element={<Films/>}></Route>
         <Route path='/user' element={<User/>}></Route>
+        <Route path='/film/:id' element={<FilmDetails/>}></Route>
       </Routes>
     </BrowserRouter>
   )
