@@ -20,9 +20,9 @@ function Films() {
   return (
     <div className="film-grid">
       {film.map(film => (
-        <div key={film.Title} className="film-card">
-          <img src={film.Poster} alt={film.Title} />
-          <h2>{film.Title}</h2>
+        <div key={film.name} className="film-card">
+          <img src={film.poster} alt={film.name} />
+          <h2>{film.name}</h2>
         </div>
       ))}
     </div>
