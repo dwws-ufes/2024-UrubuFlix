@@ -1,9 +1,16 @@
+import fs from 'fs';
 import prisma from "./prisma.js";
 import * as genreENUM from "../enum/genreENUM.js";
+import * as reviewServices from "./reviewServices.js";
+
+const isValidDate = (dateString) => {
+    return !isNaN(Date.parse(dateString));
+};
 
 export const createMovie = async (data) => {
     const { name, genres } = data;
-    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
+    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
+    const genreValues = genreEntities.map(genre => genre.name);
 
     try {
         const movie = await prisma.movie.create({
@@ -11,9 +18,9 @@ export const createMovie = async (data) => {
                 name: name,
                 total_rating: 0,
                 genres: {
-                    connectOrCreate: genreValues.map(genreId => ({
-                        where: { id: genreId },
-                        create: { id: genreId }
+                    connectOrCreate: genreValues.map(genreName => ({
+                        where: { name: genreName },
+                        create: { name: genreName}
                     }))
                 },
             },
@@ -41,7 +48,8 @@ export const setName = async (id, name) => {
 };
 
 export const setGenres = async (id, genres) => {
-    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
+    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
+    const genreValues = genreEntities.map(genre => genre.name);
 
     try {
         const movie = await prisma.movie.update({
@@ -49,9 +57,9 @@ export const setGenres = async (id, genres) => {
             data: {
                 genres: {
                     set: [],  // clear existing genres
-                    connectOrCreate: genreValues.map(genreId => ({
-                        where: { id: genreId },
-                        create: { id: genreId }
+                    connectOrCreate: genreValues.map(genreName => ({
+                        where: { name: genreName },
+                        create: { name: genreName}
                     }))
                 },
             },
@@ -204,43 +212,161 @@ export const deleteMovie = async (id) => {
     }
 };
 
-export const createFullMovieCSV = async (data) => {
-    const {
-        Title, Rated, Released, Runtime, Genre, Director, Plot, Poster, Ratings, Trailer
-    } = data;
+export const translateAgeRating = (ageRating) => {
+    switch (ageRating) {
+        case 'G':
+            return 0;
+        case 'PG':
+            return 10;
+        case 'PG-13':
+            return 12;
+        case 'R':
+            return 17;
+        case 'NC-17':
+            return 16;
+        case 'Not Rated':
+            return null;
+        default:
+            return 18;
+    }
 
-    // Calcular total_rating a partir das Ratings
-    const totalRating = Ratings.reduce((sum, rating) => {
-        const value = parseFloat(rating.Value.replace(/[^0-9.]/g, ''));
-        return sum + value;
-    }, 0) / Ratings.length;
+};   
 
-    // Dividir Genre em valores separados por vírgula e mapear para IDs
-    const genreValues = Genre.split(',').map(genre => genre.trim()).map(genreENUM.getGenreValue);
-
+export const createFullMovie = async (data) => {
+    const { name, genres, synopsis, total_rating, age_rating, trailer, release_date, director, duration, poster } = data;
+    
+    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
+    const age = translateAgeRating(age_rating);
     try {
         const movie = await prisma.movie.create({
             data: {
-                name: Title,
-                age_rating: Rated,
-                release_date: new Date(Released),
-                duration: parseInt(Runtime),
-                director: Director,
-                synopsis: Plot,
-                poster: Poster,
-                total_rating: totalRating,
-                trailer: Trailer,
-                genres: {
-                    connectOrCreate: genreValues.map(genreId => ({
-                        where: { id: genreId },
-                        create: { id: genreId, name: genreENUM.getGenreName(genreId) }
-                    }))
-                },
+                name: name,
+                total_rating: total_rating,
+                synopsis: synopsis,
+                age_rating: age,
+                trailer: trailer,
+                director: director,
+                duration: duration,
+                poster: poster,
             },
         });
+        await prisma.movie.update({
+            where: { id: movie.id },
+            data: {
+                genres: {
+                    create: genreEntities.map(genre => ({
+                        genre: {
+                            connect: { id: genre.id }
+                        }
+                    }))
+                }
+            }
+        });
+        if (isValidDate(release_date)) {
+            await prisma.movie.update({
+                where: { id: movie.id },
+                data: {
+                    release_date: release_date,
+                }
+            });
+        }
         return { status: true, message: 'Movie created successfully', movie };
-    } catch (err) {
+    }
+    catch (err) {
         console.error('Movie not created', err);
         throw new Error('Movie not created');
     }
-}
+};
+export const updateRating = async (id) => {
+    
+    const reviews = await reviewServices.findReviewByMovie(id);
+
+    const rating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+    
+    try {
+        const movie = await prisma.movie.update({
+            where: { id: id },
+            data: {
+                total_rating: rating,
+            },
+        });
+        return movie;
+    } catch (err) {
+        console.error('Error updating rating', err);
+        throw new Error('Error updating rating');
+    }
+};
+
+
+
+export const loadMoviesFromJSON = async (filePath) => {
+    try {
+        const data = fs.readFileSync(filePath, 'utf-8');
+        const movies = JSON.parse(data);
+
+        for (const movieData of movies) {
+            const { Title, Rated, Released, Runtime, Genre, Director, Plot, Poster, Ratings, Trailer } = movieData;
+
+            // Converta o formato de dados conforme necessário
+            const genres = Genre.split(',').map(genre => genre.trim());
+            const rating = Ratings.length > 0 ? parseFloat(Ratings[0].Value.split('/')[0]) : 0;
+            const duration = parseInt(Runtime.split(' ')[0]);
+
+            const movie = {
+                name: Title,
+                genres: genres,
+                synopsis: Plot,
+                total_rating: rating,
+                age_rating: Rated !== 'N/A' ? Rated : null,
+                trailer: Trailer,
+                release_date: new Date(Released),
+                director: Director,
+                duration: duration,
+                poster: Poster,
+            };
+
+            await createFullMovie(movie);
+        }
+
+        console.log('Movies loaded and created successfully');
+        return { status: true, message: 'Movies loaded and created successfully'}
+    } catch (err) {
+        console.error('Error loading movies from JSON', err);
+        throw new Error('Error loading movies from JSON');
+    }
+};
+
+export const initializeMovies = async (filePath) => {
+    if(!fs.existsSync(filePath)){
+        return console.log('File not found - movies.json, not starting the load of movies, please check the path');
+    }
+    else if(prisma.movie.count() > 0){
+        return console.log('Movies already loaded');
+    }
+    else{
+        await loadMoviesFromJSON(filePath);
+        return { status: true, message: 'Movies loaded and created successfully'}
+    }
+};
+
+export const getMoviesByCatalog = async (catalogID) => {
+    try {
+        const movies = await prisma.movie.findMany({
+            where: { catalog_has_movie: { id: catalogID } },
+        });
+        return movies;
+    } catch (err) {
+        console.error('Error finding movies by catalog', err);
+        throw new Error('Error finding movies');
+    }
+};
+
+export const getAllMovies = async () => {
+    try {
+        const movies = await prisma.movie.findMany();
+        return movies;
+    } catch (err) {
+        console.error('Error finding movies', err);
+        throw new Error('Error finding movies');
+    }
+};

@@ -12,6 +12,7 @@ import * as userServices from './services/userServices.js';
 import * as catalogServices from './services/catalogServices.js';
 import * as movieServices from './services/movieServices.js';
 import * as genreENUM from './enum/genreENUM.js';
+import { exit } from 'process'
 
 dotenv.config()
 const app = express()
@@ -25,6 +26,10 @@ app.use(cors({
 
 const PORT = process.env.PORT || 3002;
 
+
+const filePathMoviesJSON = './script_movies/movies.json';// Caminho do arquivo JSON com os filmes FIQUE ATENTO PARA O CAMINHO CORRETO
+
+
 // Verifica se a conexão com o banco de dados foi estabelecida
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
@@ -37,6 +42,7 @@ app.listen(PORT, async () => {
   } 
   catch (error) {
     console.error('Error connecting to the database:', error);
+    exit(1);
   }
   try{
     await genreENUM.initializeGenres();
@@ -44,6 +50,12 @@ app.listen(PORT, async () => {
   }
   catch (error) {
     console.error('Error initializing genres:', error);
+  }
+  try{
+    await movieServices.initializeMovies(filePathMoviesJSON);
+  }
+  catch (error) {
+    console.error('Error initializing movies:', error);
   }
 });
 
