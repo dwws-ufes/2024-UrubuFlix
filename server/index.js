@@ -100,22 +100,15 @@ app.delete('/delete', async (req, res) => {
     return res;
 })
 
-//===================// read file movies //===================//
-const filePath = './script_movies/movies.json'
 
-app.get('/films', (req, res) => {
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading file:', err);
-      res.status(500).send('Error reading file');
-      return;
-    }
-    try {
-      const jsonData = JSON.parse(data);
-      res.json(jsonData); 
-    } catch (err) {
-      console.error('Error parsing JSON:', err);
-      res.status(500).send('Error parsing JSON');
-    }
-  });
+app.get('/films', async (req, res) => {
+  const movies = await movieServices.getAllMovies();
+  res.json(movies);
+
+});
+
+app.get('/films/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const movie = await movieServices.getMovieById(id);
+  res.json(movie);
 });
