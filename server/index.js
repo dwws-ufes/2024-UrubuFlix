@@ -98,13 +98,13 @@ app.post('/login', async (req, res) => {
 
   if (!user) {
     console.log('user is not registered');
-    return res.json({status: false,message: 'user is not registered'})
+    return res.json({status: false,message: 'User is not registered'})
   }
 
   const validPassword = await bcrypt.compare(password,user.password)
 
   if (!validPassword){
-    return res.json({message : "password is incorrect"})
+    return res.json({status: false, message: "Incorrect password"})
   }
 
   const token = jwt.sign({username: user.username, email : user.email}, process.env.KEY, {expiresIn: '3h'})

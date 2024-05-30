@@ -20,9 +20,15 @@ function Login() {
       if (response.status) {
         navigate('/');
       } 
-      else if (!response.status && response.message === 'user already existed') {
-        alert('Account already created, try again');
+      else if (!response.status && response.message === 'Empty field') {
+        alert('Please fill in all fields');
+      }
+      else if (!response.status && response.message === 'User is not registered') {
+        alert('User is not registered\nPlease register first');
       } 
+      else if (!response.status && response.message === 'Incorrect password') {
+        alert('Incorrect password\nTry again');
+      }
       else {
         alert('Some information is incorrect\nTry again');
       }

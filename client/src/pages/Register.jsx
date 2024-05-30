@@ -23,7 +23,7 @@ function Register() {
         alert('Account created successfully!');
         navigate('/');
       } 
-      else if (!response.status && response.message === 'user already existed') {
+      else if (!response.status && response.message === 'User already existed') {
         alert('Account already created, try again');
       } else if (!response.status && response.message === 'Passwords do not match') {
         alert('Passwords do not match');
