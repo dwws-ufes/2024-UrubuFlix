@@ -51,16 +51,21 @@ export async function getGenreValue(genreName){
 }
 
 export async function initializeGenres() {
-    const genreEntries = Object.entries(Genre);
-    for (const [genreName, genreId] of genreEntries) {
-        try {
-            await prisma.genre.upsert({
-                where: { id: genreId },
-                update: {},
-                create: { id: genreId, name: genreName },
-            });
-        } catch (err) {
-            console.error(`Error creating genre ${genreName}`, err);
-        }
+    const nome = 'PLACEHOLDER';
+    try {
+        const genre = await findOrCreateGenre(nome);
+        console.log('Genre initialized', genre);
+    } catch (err) {
+        console.error('Error initializing genre', err);
     }
 };
+
+export async function getAllGenres() {
+    try {
+        const genres = await prisma.genre.findMany();
+        return genres;
+    } catch (err) {
+        console.error('Error getting genres', err);
+        throw new Error('Error getting genres');
+    }
+}

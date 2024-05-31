@@ -9,7 +9,7 @@ export const createUser = async (data) => {
     const { username, email, password } = data;
     const hashPassword = await bcrypt.hash(password, 10);
     try {
-        const catalog = await catalogServices.createCatalog({ name: `${username}'s favorites`, genre: 'PLACEHOLDER', genres : [] });
+        const catalog = await catalogServices.createCatalog({ name: `${username}'s favorites`, genres : ['PLACEHOLDER'] });
 
         const user = await prisma.user.create({
         data: {
@@ -24,7 +24,7 @@ export const createUser = async (data) => {
     }
     catch (err) {
       console.error('User not created', err);
-      catalogServices.deleteCatalog(catalogServices.findCatalogByName(`${username}'s favorites`));
+      catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
       throw new Error('User not created');
     }
   };
@@ -139,13 +139,16 @@ export const deleteUser = async (req,res) => {
       if (!user) {
         return res.json({status: false, message: "user not exist"})
       }
+      const idCatalog = user.catalog_id;
+      
 
       await prisma.user.delete({
         where: {
           id:user.id,
         },
       });
-
+      await catalogServices.deleteCatalog(idCatalog);
+      
       res.clearCookie('token')
       return res.json({status : true, message: 'delete sucess !!!'})
     }
