@@ -227,7 +227,6 @@ export const translateAgeRating = (ageRating) => {
 export const createFullMovie = async (data) => {
     const { name, genres, synopsis, total_rating, age_rating, trailer, release_date, director, duration, poster } = data;
     
-    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
     const age = translateAgeRating(age_rating);
     try {
         const movie = await prisma.movie.create({
@@ -320,10 +319,11 @@ export const loadMoviesFromJSON = async (filePath) => {
 };
 
 export const initializeMovies = async (filePath) => {
+    const countMovies = await prisma.movie.count();
     if(!fs.existsSync(filePath)){
         return console.log('File not found - movies.json, not starting the load of movies, please check the path');
     }
-    else if(prisma.movie.count() > 0){
+    else if(countMovies > 0){
         return console.log('Movies already loaded');
     }
     else{
@@ -350,6 +350,24 @@ export const getAllMovies = async () => {
         return movies;
     } catch (err) {
         console.error('Error finding movies', err);
+        throw new Error('Error finding movies');
+    }
+};
+
+export const getMoviesByGenre = async (genreID) => {
+    try {
+        const movies = await prisma.movie.findMany({
+            where: { 
+                genres: { 
+                    some: { 
+                        genreId: genreID 
+                    } 
+                } 
+            },
+        });
+        return movies;
+    } catch (err) {
+        console.error('Error finding movies by genre', err);
         throw new Error('Error finding movies');
     }
 };
