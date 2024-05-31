@@ -1,15 +1,38 @@
-import Axios from 'axios'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import '../style/Home.css';
 import logo from '../assets/urubuflix.png'
 import { Link, useNavigate } from 'react-router-dom'
-
+import { verifyUser } from '../services/Axios';
+import urubuUser from '../assets/urubu.png';
+import Films from './Films';
 
 function Home() {
   const navigate =  useNavigate()
-  
+  const [user, setUser] = useState()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await verifyUser();
+        if (response.status) {
+          setUser(response.user);
+        } 
+        else {
+          navigate('/');
+        }
+      } 
+      catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
   function handleLogin(){
     navigate('/login')
+    console.log(user);
   }
   function handleRegister(){
     navigate('/register')
@@ -29,7 +52,7 @@ function Home() {
               <li><Link to='/'>Home</Link></li>
               <li><Link to='/'>Movies</Link></li>
               <li><Link to='/'>Category</Link></li>
-              <li><Link to='/'>Favorite</Link></li>
+              {user ? <li><Link to='/'>Favorite</Link></li> : <p></p>}
             </ul>
           </nav>
           <div className="topo-pesquisa">
@@ -47,6 +70,8 @@ function Home() {
             </div>
           </div>
         </div>
+        
+        {user ? <Link to='/user'><img src={urubuUser} alt="urubuflix" className='test'/></Link> : 
         <div className="topo-direito">
           <div className="sublogin">
             <div>
@@ -59,9 +84,11 @@ function Home() {
             </div>
           </div>
         </div>
+        }
       </header>
 
       <main className="conteudo-principal">
+        <Films></Films>
         <div className="primeiro-h1">
           <h1>O melhor site de review de filmes</h1>
         </div>

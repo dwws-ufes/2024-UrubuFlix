@@ -4,7 +4,7 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
-import Dashboard from './pages/Dashboard'
+import Films from './pages/Films'
 import User from './pages/User'
 
 
@@ -18,7 +18,7 @@ function App() {
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>
         <Route path='/resetPassword/:token' element={<ResetPassword/>}></Route>
-        <Route path='/dashboard' element={<Dashboard/>}></Route>
+        <Route path='/films' element={<Films/>}></Route>
         <Route path='/user' element={<User/>}></Route>
       </Routes>
     </BrowserRouter>
