@@ -53,13 +53,14 @@ const FilmDetails = () => {
       
       <hr/>
         <div className='player'>
-        
-          <ReactPlayer
-            url={film.trailer}
-            controls={true}
-            width="400px"
-            height="360px"
-          />
+          {film.trailer ? 
+            <ReactPlayer
+              url={film.trailer}
+              controls={true}
+              width="400px"
+              height="360px"
+            />
+          : <p>Error trailer</p>} 
         </div>
 
       <hr/>

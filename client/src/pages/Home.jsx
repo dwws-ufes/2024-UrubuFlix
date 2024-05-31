@@ -62,7 +62,7 @@ function Home() {
         </div>
       </main>
 
-      <Footer></Footer>
+      <Footer/>
     </div>
   );
 }

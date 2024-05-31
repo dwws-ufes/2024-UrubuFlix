@@ -6,11 +6,14 @@ import { verifyUser } from '../services/Axios';
 import urubuUser from '../assets/urubu.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import User from './User'
 
 
 function NavBar() {
   const navigate =  useNavigate()
   const [user, setUser] = useState()
+  const [showComponent, setShowComponent] = useState(false);
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,6 +38,10 @@ function NavBar() {
   }
   function handleRegister(){
     navigate('/register')
+  }
+
+  function mudar(){
+    setShowComponent(true)
   }
 
   return (
@@ -69,7 +76,9 @@ function NavBar() {
           </div>
         </div>
         
-        {user ? <Link to='/user'><img src={urubuUser} alt="urubuflix"/></Link> : 
+        {user ?
+            <User/>
+         : 
         <div className="top-right">
           <div className="sublogin">
             <div>
