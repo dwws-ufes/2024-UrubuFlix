@@ -37,7 +37,11 @@ const User = () => {
     try {
       const response = await logout();
       if (response.status) {
-        navigate('/');
+        if (window.location.pathname === '/') {
+          window.location.reload();
+        } else {
+          navigate('/');
+        }
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +71,7 @@ const User = () => {
         <div className="user-profile">
         
         <h2 className="username">{user.username}</h2>
-        <button className="button" onClick={() => alert('Lista de Filmes')}>
+        <button className="button" onClick={() => alert('List of films')}>
           Movie list
         </button>
         <button className="button" onClick={handleChangePassword}>
