@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import NavBar from './NavBar';
+import '../style/FilmDetails.css'
+import Footer from './Footer';
 
 const FilmDetails = () => {
   const { id } = useParams();
   const [film, setFilm] = useState({})
+  const [comments, setComments] = useState([]); 
 
   useEffect(() => {
     Axios.get(`http://localhost:3002/films/${id}`)
     .then((res) => {
       if (res.data) {
-        console.log(res.data);
         setFilm(res.data)
       }else {
         console.log(error);
@@ -19,44 +22,64 @@ const FilmDetails = () => {
     })
   },[])
 
-  function extractVideoId(url) {
-    let videoId = url.split('v=')[1];
-    let ampersandPosition = videoId.indexOf('&');
-    if (ampersandPosition !== -1) {
-      videoId = videoId.substring(0, ampersandPosition);
-    }
-    return videoId;
-  }
+  
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); 
+    setComments('');
+  };
+
 
 
   return (
-    <div className='movie-info'>
-      <div className='movie-poster'>
-        <div className='poster'>
-          <img src={film.poster} alt={film.name} />
+    <div className='app'>
+      <NavBar/>
+        <div className='movie-info'>
+          <div className='movie-poster'>
+            <div className='poster'>
+              <img src={film.poster} alt={film.name} />
+            </div>
+          
+            <div className='info-movie'>
+              <h2>{film.name}</h2>
+              <p>Release Date: {film.release_date}</p>
+              <p>Duration: {film.duration} min</p>
+              <p>Director: {film.director}</p>
+              <p>Age rating: {film.age_rating}</p>
+              <p>Synopsis: {film.synopsis}</p>
+            </div>  
+          </div>
+      
+      <hr/>
+        <div className='player'>
+        
+          <ReactPlayer
+            url={film.trailer}
+            controls={true}
+            width="400px"
+            height="360px"
+          />
         </div>
+
+      <hr/>
+
+      <div className='comments'>
+        <h2>POPULAR REVIEWS</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <textarea className='text'
+            onChange={(event) => setComments(event.target.value)}
+            placeholder="Enter your comment here"
+          />
+          <button type="submit">Enviar</button>
+        </form>
       </div>
 
-      <div className='movie-info'>
-        <h2>{film.name}</h2>
-        <p>Release Date: {film.release_date}</p>
-        <p>Duration: {film.duration} min</p>
-        <p>Director: {film.director}</p>
-        {/* <p>Genre: {film.move}</p> */}
-        <p>Age rating: {film.age_rating}</p>
-        <p>Synopsis: {film.synopsis}</p>
-        {/* <p>Rotten Tomatoes Score: {film.total_rating}</p> */}
       </div>
+      <Footer/>
 
-      <ReactPlayer
-        url={film.trailer}
-        controls={true}
-        width="640px"
-        height="360px"
-      />
-  
     </div>
-    
   );
 }
 
