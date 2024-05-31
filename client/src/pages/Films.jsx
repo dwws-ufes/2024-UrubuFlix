@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
+import { Link } from 'react-router-dom';
 import '../style/Films.css'
 
 function Films() {
@@ -20,10 +21,13 @@ function Films() {
   return (
     <div className="film-grid">
       {film.map(film => (
-        <div key={film.Title} className="film-card">
-          <img src={film.Poster} alt={film.Title} />
-          <h2>{film.Title}</h2>
-        </div>
+        
+          <div className="film-card">
+            <Link to={`/film/${film.id}`} key={film.id}>
+            <img src={film.poster} alt={film.name} />
+            <h2>{film.name}</h2>
+            </Link>
+          </div>
       ))}
     </div>
   )

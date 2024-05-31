@@ -7,28 +7,50 @@ export const Genre = Object.freeze({
     COMEDY: 3,
     DRAMA: 4,
     HORROR: 5
-   
 });
   
-export const GenreNames = Object.freeze({
-    1: 'PLACEHOLDER',
-    2: 'ACTION',
-    3: 'COMEDY',
-    4: 'DRAMA',
-    5: 'HORROR'
-   
-});
 
 // services/genre.js
-export function getGenreName(genreValue) {
-    return GenreNames[genreValue] || 'UNKNOWN';
+export async function findOrCreateGenre(genreName) {
+    try {
+        const genre = await prisma.genre.upsert({
+            where: { name: genreName },
+            update: {},
+            create: { name: genreName },
+        });
+        return genre;
+    } catch (err) {
+        console.error('Error finding or creating genre', err);
+        throw new Error('Error finding or creating genre');
+    }
+};
+export async function getGenreName(genreValue)  {
+    try{
+        const genre = await prisma.genre.findUnique({
+            where: { id: genreValue },
+        });
+        return genre.name;
+    }
+    catch (err) {
+        console.error('Error finding genre by value', err);
+        throw new Error('Error finding genre');
+    }
 }
   
-export function getGenreValue(genreName) {
-    return Genre[genreName.toUpperCase()] || null;
+export async function getGenreValue(genreName){
+    try{
+        const genre = await prisma.genre.findUnique({
+            where: { name: genreName },
+        });
+        return genre.id;
+    }
+    catch (err) {
+        console.error('Error finding genre by name', err);
+        throw new Error('Error finding genre');
+    }
 }
-  
-export const initializeGenres = async () => {
+
+export async function initializeGenres() {
     const genreEntries = Object.entries(Genre);
     for (const [genreName, genreId] of genreEntries) {
         try {

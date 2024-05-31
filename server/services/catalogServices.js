@@ -2,21 +2,16 @@ import prisma from "./prisma.js";
 import * as genreENUM from "../enum/genreENUM.js";
 
 export const createCatalog = async (data) => {
-    const { name, genres, genre } = data;
-    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
+    const { name, genres} = data;
    
     try {
         const catalog = await prisma.catalog.create({
             data: {
                 name: name,
-                genres: {
-                    connectOrCreate: genreValues.map(genreId => ({
-                        where: { id: genreId },
-                        create: { id: genreId }
-                    }))
-                }
+                
             },
         });
+        await setGenres(catalog.id, genres);
         return catalog;
     } catch (err) {
         console.error('Catalog not created', err);
@@ -40,17 +35,18 @@ export const setName = async (id, name) => {
 };
 
 export const setGenres = async (id, genres) => {
-    const genreValues = genres.map(genre => genreENUM.getGenreValue(genre));
-
+    const genreEntities = await Promise.all(genres.map(genre => genreENUM.findOrCreateGenre(genre)));
+    
     try {
         const catalog = await prisma.catalog.update({
             where: { id: id },
             data: {
                 genres: {
                     set: [],  // clear existing genres
-                    connectOrCreate: genreValues.map(genreId => ({
-                        where: { id: genreId },
-                        create: { id: genreId }
+                    create: genreEntities.map(genre => ({
+                        genre: {
+                            connect: { id: genre.id }
+                        }
                     }))
                 }
             },
