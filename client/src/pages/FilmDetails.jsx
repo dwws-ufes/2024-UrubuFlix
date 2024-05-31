@@ -22,15 +22,14 @@ const FilmDetails = () => {
     })
   },[])
 
-  
-
-
   const handleSubmit = (event) => {
     event.preventDefault(); 
     setComments('');
   };
 
-
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
 
   return (
     <div className='app'>
@@ -47,6 +46,12 @@ const FilmDetails = () => {
               <p>Duration: {film.duration} min</p>
               <p>Director: {film.director}</p>
               <p>Age rating: {film.age_rating}</p>
+              <p>Genres: {film.genres && film.genres.map((genre, index) => 
+                  genre.genre ? 
+                    (index === 0 ? capitalizeFirstLetter(genre.genre.name) : 
+                    genre.genre.name.toLowerCase()) : ''
+                ).join(', ')
+              }</p>
               <p>Synopsis: {film.synopsis}</p>
             </div>  
           </div>
