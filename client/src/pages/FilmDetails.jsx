@@ -33,6 +33,13 @@ const FilmDetails = () => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
 
+  // const handleAddToFavorites = () => {
+  //   // Código para adicionar o filme aos favoritos
+
+      // Quando fizer a função fazer:
+      // <button className='favorite' onClick={handleAddToFavorites}>Add to Favorites</button>
+  // };
+
   return (
     <div className='app'>
       <NavBar/>
@@ -55,6 +62,7 @@ const FilmDetails = () => {
                 ).join(', ')
               }</p>
               <p>Synopsis: {film.synopsis}</p>
+              <button className='favorite'>Add to Favorites</button>
             </div>  
           </div>
       
