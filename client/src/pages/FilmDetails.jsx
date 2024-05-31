@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 
 const FilmDetails = () => {
   const { id } = useParams();
@@ -46,12 +47,13 @@ const FilmDetails = () => {
         {/* <p>Rotten Tomatoes Score: {film.total_rating}</p> */}
       </div>
 
-
-    <div className='movie-trailer'>
-      <iframe src={`https://www.youtube.com/embed/${extractVideoId(film.trailer)}`} title="Movie Trailer"></iframe>
-    </div>
-
-
+      <ReactPlayer
+        url={film.trailer}
+        controls={true}
+        width="640px"
+        height="360px"
+      />
+  
     </div>
     
   );
