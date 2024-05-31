@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import ReactStars from "react-rating-stars-component";
 import NavBar from './NavBar';
 import '../style/FilmDetails.css'
 import Footer from './Footer';
@@ -10,6 +11,7 @@ const FilmDetails = () => {
   const { id } = useParams();
   const [film, setFilm] = useState({})
   const [comments, setComments] = useState([]); 
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     Axios.get(`http://localhost:3002/films/${id}`)
@@ -72,7 +74,11 @@ const FilmDetails = () => {
 
       <div className='comments'>
         <h2>POPULAR REVIEWS</h2>
-        
+        <h3>Make your review of the film</h3>
+        <div className='stars'>
+          <p>Your rating for the film:</p>
+          <ReactStars count={5} onChange={setRating} size={20} activeColor="#ffd700"/>
+        </div>
         <form onSubmit={handleSubmit}>
           <textarea className='text'
             onChange={(event) => setComments(event.target.value)}

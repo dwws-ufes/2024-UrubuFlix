@@ -35,6 +35,11 @@
   border-radius: 8px;
 }
 
+.stars {
+  display: flex;
+  align-items: center;
+}
+
 .player {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -47,6 +52,12 @@
   margin-top: 10px;
   
 }
+
+.comments h3 {
+  margin-top: 10px;
+  color: #b73223;
+}
+
 .text {
   width: 100%;
 }
