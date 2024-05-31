@@ -1,12 +1,25 @@
-.user-profile {
+.foto-logo {
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 45px;
+  margin-left: 20px;
+}
+.foto-logo:hover .user-profile{
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background-color: #645757;
   border-radius: 10px;
-  width: 300px;
-  margin: 50px auto;
+  width: 8vmax;
+  margin:auto;
+  height: 25vmax;
+  font-size: 1vmax;
+}
+.user-profile {
+  display: none;
+  background: blue;
 }
 
 .profile-pic {
@@ -42,4 +55,9 @@
   color: #fff;
   border: none;
   border-radius: 5px;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
 }

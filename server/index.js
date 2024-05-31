@@ -115,7 +115,11 @@ app.get('/films', async (req, res) => {
 });
 
 app.get('/films/:id', async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid movie ID' });
+    return;
+  }
   const movie = await movieServices.findMovieById(id);
   res.json(movie);
 });

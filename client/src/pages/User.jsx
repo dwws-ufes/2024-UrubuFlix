@@ -58,26 +58,30 @@ const User = () => {
   };
 
   return (
-    <div className="user-profile">
+    <div className='foto-logo'>
       <img
-        src={urubuUser}
-        alt="Profile"
-        className="profile-pic"
-      />
-      <h2 className="username">{user.username}</h2>
-      <button className="button" onClick={() => alert('Lista de Filmes')}>
-        Movie list
-      </button>
-      <button className="button" onClick={handleChangePassword}>
-        Change password
-      </button>
-      <button className="button" onClick={handleLogout}>
-        Logout
-      </button>
-      <button className="delete-button" onClick={handleDeleteAccount}>
-        Delete Account
-      </button>
+          src={urubuUser}
+          alt="Profile"
+          className="profile-pic"
+        />
+        <div className="user-profile">
+        
+        <h2 className="username">{user.username}</h2>
+        <button className="button" onClick={() => alert('Lista de Filmes')}>
+          Movie list
+        </button>
+        <button className="button" onClick={handleChangePassword}>
+          Change password
+        </button>
+        <button className="button" onClick={handleLogout}>
+          Logout
+        </button>
+        <button className="delete-button" onClick={handleDeleteAccount}>
+          Delete Account
+        </button>
+      </div>
     </div>
+    
   );
 };
 
