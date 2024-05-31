@@ -1,7 +1,8 @@
-import React from 'react'
-import Films from './Films';
+import React, { useEffect, useState } from 'react'
 import NavBar from './NavBar';
 import Footer from './Footer';
+import Catalogs from './Catalogs';
+
 
 function Category() {
 
@@ -10,11 +11,10 @@ function Category() {
         <NavBar></NavBar>
 
         <main className="main-content">
-          
-          <div className="title">
-            <h1>TODO (Category)</h1>
-          </div>
-        </main>
+            <div className='catalogs'>
+              <Catalogs></Catalogs>
+            </div>
+          </main>
 
         <Footer/>
       </div>

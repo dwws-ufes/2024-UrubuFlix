@@ -202,11 +202,19 @@ export const getAllCatalogs = async () => {
                         genre: true,
                     },
                 },
+            },
+            include: {
+                catalog_has_movie:{
+                    include:{
+                        movie: true,
+                    },
+                
+                }, 
             },     
         });  
         return catalogs;
     } catch (err) {
         console.error('Error getting all catalogs', err);
         throw new Error('Error getting all catalogs');
-    }
+    }
 }

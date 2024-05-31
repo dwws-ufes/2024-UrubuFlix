@@ -107,7 +107,7 @@ app.delete('/delete', async (req, res) => {
 })
 
 
-
+// <---------------------- ROTAS DE FILMES E CATÁLOGOS ---------------------->
 app.get('/films', async (req, res) => {
   const movies = await movieServices.getAllMovies();
   res.json(movies);
@@ -124,6 +124,9 @@ app.get('/films/:id', async (req, res) => {
   res.json(movie);
 });
 
+
+
+// <---------------------- ROTAS DE GENEROS (PAGE CATEGORIAS) ------------------>
 app.get('/catalogs', async (req, res) => {
   const catalogs = await catalogServices.getAllCatalogs();
   res.json(catalogs);
