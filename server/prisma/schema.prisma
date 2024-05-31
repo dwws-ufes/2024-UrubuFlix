@@ -91,6 +91,7 @@ model user {
   email        String      @unique(map: "email_UNIQUE") @db.VarChar(255)
   username     String      @unique(map: "username_UNIQUE") @db.VarChar(255)
   password     String      @db.VarChar(255)
+  is_admin     Boolean     @default(false)
   catalog_id   Int
   date_joined  DateTime    @default(now()) @db.Timestamp(0)
   reviews      review[]

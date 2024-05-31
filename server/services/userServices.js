@@ -27,7 +27,32 @@ export const createUser = async (data) => {
       catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
       throw new Error('User not created');
     }
-  };
+};
+
+export const createAdmin = async (data) => {
+  const { username, email, password } = data;
+  const hashPassword = await bcrypt.hash(password, 10);
+  try {
+      const catalog = await catalogServices.createCatalog({ name: `${username}'s favorites`, genres : ['PLACEHOLDER'] });
+
+      const user = await prisma.user.create({
+      data: {
+        email: email,
+        username: username,
+        password: hashPassword,
+        isAdmin: true,
+        catalog: { connect: { id: catalog.id } }
+      },
+    });
+    
+    return { status: true, message: 'User created successfully', user };
+  }
+  catch (err) {
+    console.error('User not created', err);
+    catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
+    throw new Error('User not created');
+  }
+};
 
 export const findUserByEmail = async (email) => {
     try {
@@ -226,5 +251,67 @@ export const resetPassword = async (req, res) => {
   }catch (err) {
     console.log(err);
     return res.json("invalid token")
+  }
+};
+
+export const makeAdmin = async (req, res) => {
+  const {email} = req.body
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email:email
+      }
+    });
+
+    if (!user) {
+      return res.json({message: "user not registered"})
+    }
+
+    await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        isAdmin: true
+      }
+    });
+
+    return res.json({status: true, message: "ok"})
+
+  }catch (err) {
+    console.log(err);
+    return res.json("error")
+  }
+};
+
+export const removeAdmin = async (req, res) => {
+  const {email} = req.body
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email:email
+      }
+    });
+
+    if (!user) {
+      return res.json({message: "user not registered"})
+    }
+
+    await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        isAdmin: false
+      }
+    });
+
+    return res.json({status: true, message: "ok"})
+
+  }catch (err) {
+    console.log(err);
+    return res.json("error")
   }
 };
