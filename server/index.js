@@ -57,6 +57,12 @@ app.listen(PORT, async () => {
   catch (error) {
     console.error('Error initializing movies:', error);
   }
+  try{
+    await catalogServices.initializeCatalogs();
+  }
+  catch (error) {
+    console.error('Error initializing catalogs:', error);
+  }
 });
 
 
@@ -101,6 +107,7 @@ app.delete('/delete', async (req, res) => {
 })
 
 
+
 app.get('/films', async (req, res) => {
   const movies = await movieServices.getAllMovies();
   res.json(movies);
@@ -115,4 +122,9 @@ app.get('/films/:id', async (req, res) => {
   }
   const movie = await movieServices.findMovieById(id);
   res.json(movie);
+});
+
+app.get('/catalogs', async (req, res) => {
+  const catalogs = await catalogServices.getAllCatalogs();
+  res.json(catalogs);
 });
