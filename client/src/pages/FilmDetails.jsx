@@ -11,6 +11,7 @@ const FilmDetails = () => {
     Axios.get(`http://localhost:3002/films/${id}`)
     .then((res) => {
       if (res.data) {
+        console.log(res.data);
         setFilm(res.data)
       }else {
         console.log(error);

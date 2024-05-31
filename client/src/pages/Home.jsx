@@ -35,7 +35,7 @@ function Home() {
 
   function handleLogin(){
     navigate('/login')
-    console.log(user);
+    
   }
   function handleRegister(){
     navigate('/register')
