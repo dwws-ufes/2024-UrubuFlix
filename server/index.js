@@ -116,7 +116,7 @@ app.get('/films', async (req, res) => {
 
 app.get('/films/:id', async (req, res) => {
   const id = parseInt(req.params.id);
-  const movie = await movieServices.getMovieById(id);
+  const movie = await movieServices.findMovieById(id);
   res.json(movie);
 });
 

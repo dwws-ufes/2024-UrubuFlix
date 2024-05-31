@@ -172,6 +172,13 @@ export const findMovieById = async (id) => {
     try {
         const movie = await prisma.movie.findUnique({
             where: { id: id },
+            include: {
+                genres: {
+                    include: {
+                        genre: true,
+                    },
+                },
+            },
         });
         return movie;
     } catch (err) {
@@ -346,7 +353,15 @@ export const getMoviesByCatalog = async (catalogID) => {
 
 export const getAllMovies = async () => {
     try {
-        const movies = await prisma.movie.findMany();
+        const movies = await prisma.movie.findMany({
+            include: {
+                genres: {
+                    include: {
+                        genre: true,
+                    },
+                },
+            },
+        });
         return movies;
     } catch (err) {
         console.error('Error finding movies', err);

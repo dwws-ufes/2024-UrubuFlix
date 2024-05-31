@@ -195,7 +195,14 @@ export const getAllCatalogs = async () => {
                         }
                     }
                 }
-            }     
+            },
+            include: {
+                genres: {
+                    include: {
+                        genre: true,
+                    },
+                },
+            },     
         });  
         return catalogs;
     } catch (err) {
