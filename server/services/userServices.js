@@ -54,6 +54,18 @@ export const createAdmin = async (data) => {
   }
 };
 
+export const findUserById = async (id) => {
+    try {
+      const user = await prisma.user.findFirst({
+        where: { id: id },
+      });
+      return user;
+    } catch (err) {
+      console.error('Error finding user by id', err);
+      throw new Error('Error finding user');
+    }
+};
+
 export const findUserByEmail = async (email) => {
     try {
       const user = await prisma.user.findFirst({
@@ -130,9 +142,7 @@ export const login = async (req, res) => {
 
 
 export const verifyUser = async (req, res, next) => {
-  
     try {
-      
       const token = req.cookies.token;
       
       if (!token){

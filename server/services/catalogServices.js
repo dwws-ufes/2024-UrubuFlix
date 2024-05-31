@@ -202,6 +202,14 @@ export const getAllCatalogs = async () => {
                         genre: true,
                     },
                 },
+            },
+            include: {
+                catalog_has_movie:{
+                    include:{
+                        movie: true,
+                    },
+                
+                }, 
             },     
         });  
         return catalogs;

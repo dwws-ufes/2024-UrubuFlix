@@ -9,96 +9,106 @@ import Footer from './Footer';
 
 const FilmDetails = () => {
   const { id } = useParams();
-  const [film, setFilm] = useState({})
-  const [comments, setComments] = useState([]); 
+  const [film, setFilm] = useState({});
+  const [comments, setComments] = useState(''); // Alterado para string vazia
   const [rating, setRating] = useState(0);
+
+  Axios.defaults.withCredentials = true;
 
   useEffect(() => {
     Axios.get(`http://localhost:3002/films/${id}`)
+      .then((res) => {
+        if (res.data) {
+          setFilm(res.data);
+        } else {
+          console.log('Error:', res.error);
+        }
+      })
+      .catch(error => console.log('Error:', error));
+  }, [id]);
+
+  const handleAddReview = async () => {
+  try {
+    const review = { rating, comments, filmId: id };
+    await Axios.post('http://localhost:3002/review', review, {
+      withCredentials: true
+    })
     .then((res) => {
       if (res.data) {
-        setFilm(res.data)
-      }else {
-        console.log(error);
+        setComments(''); // Atualiza o estado dos comentários
+        alert('Review added successfully');
+      } else {
+        console.log('Error:', res.error);
       }
     })
-  },[])
+  } catch (error) {
+    console.log('Error:', error);
+  }
+};
 
   const handleSubmit = (event) => {
-    event.preventDefault(); 
-    setComments('');
+    event.preventDefault();
+    handleAddReview();
   };
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
 
-  // const handleAddToFavorites = () => {
-  //   // Código para adicionar o filme aos favoritos
-
-      // Quando fizer a função fazer:
-      // <button className='favorite' onClick={handleAddToFavorites}>Add to Favorites</button>
-  // };
-
   return (
     <div className='app'>
-      <NavBar/>
-        <div className='movie-info'>
-          <div className='movie-poster'>
-            <div className='poster'>
-              <img src={film.poster} alt={film.name} />
-            </div>
-          
-            <div className='info-movie'>
-              <h2>{film.name}</h2>
-              <p>Release Date: {film.release_date}</p>
-              <p>Duration: {film.duration} min</p>
-              <p>Director: {film.director}</p>
-              <p>Age rating: {film.age_rating}</p>
-              <p>Genres: {film.genres && film.genres.map((genre, index) => 
-                  genre.genre ? 
-                    (index === 0 ? capitalizeFirstLetter(genre.genre.name) : 
-                    genre.genre.name.toLowerCase()) : ''
-                ).join(', ')
-              }</p>
-              <p>Synopsis: {film.synopsis}</p>
-              <button className='favorite'>Add to Favorites</button>
-            </div>  
+      <NavBar />
+      <div className='movie-info'>
+        <div className='movie-poster'>
+          <div className='poster'>
+            <img src={film.poster} alt={film.name} />
           </div>
-      
-      <hr/>
+          <div className='info-movie'>
+            <h2>{film.name}</h2>
+            <p>Release Date: {film.release_date}</p>
+            <p>Duration: {film.duration} min</p>
+            <p>Director: {film.director}</p>
+            <p>Age rating: {film.age_rating}</p>
+            <p>Genres: {film.genres && film.genres.map((genre, index) =>
+              genre.genre ?
+                (index === 0 ? capitalizeFirstLetter(genre.genre.name) :
+                  genre.genre.name.toLowerCase()) : ''
+            ).join(', ')
+            }</p>
+            <p>Synopsis: {film.synopsis}</p>
+            <button className='favorite'>Add to Favorites</button>
+          </div>
+        </div>
+        <hr />
         <div className='player'>
-          {film.trailer ? 
+          {film.trailer ?
             <ReactPlayer
               url={film.trailer}
               controls={true}
               width="400px"
               height="360px"
             />
-          : <p>Error trailer</p>} 
+            : <p>Error trailer</p>}
         </div>
-
-      <hr/>
-
-      <div className='comments'>
-        <h2>POPULAR REVIEWS</h2>
-        <h3>Make your review of the film</h3>
-        <div className='stars'>
-          <p>Your rating for the film:</p>
-          <ReactStars count={5} onChange={setRating} size={20} activeColor="#ffd700"/>
+        <hr />
+        <div className='comments'>
+          <h2>POPULAR REVIEWS</h2>
+          <h3>Make your review of the film</h3>
+          <div className='stars'>
+            <p>Your rating for the film:</p>
+            <ReactStars count={5} onChange={setRating} size={20} activeColor="#ffd700" />
+          </div>
+          <form onSubmit={handleSubmit}>
+            <textarea className='text'
+              value={comments}
+              onChange={(event) => setComments(event.target.value)}
+              placeholder="Enter your comment here"
+            />
+            <button type="submit">Enviar</button>
+          </form>
         </div>
-        <form onSubmit={handleSubmit}>
-          <textarea className='text'
-            onChange={(event) => setComments(event.target.value)}
-            placeholder="Enter your comment here"
-          />
-          <button type="submit">Enviar</button>
-        </form>
       </div>
-
-      </div>
-      <Footer/>
-
+      <Footer />
     </div>
   );
 }

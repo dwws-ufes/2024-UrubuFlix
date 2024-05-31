@@ -3,15 +3,15 @@ import * as userServices from "./userServices.js";
 import * as movieServices from "./movieServices.js";
 
 export const createReview = async (data) => {
-    const { userId, movieId, rating, comment } = data;
+    const { userId, movieId, rating, comments } = data;
     try {
         const user = await userServices.findUserById(userId);
-        const movie = await movieServices.findMovieById(movieId);
-
+        const movie_id = Number(movieId);
+        const movie = await movieServices.findMovieById(movie_id);
         const review = await prisma.review.create({
             data: {
                 rating: rating,
-                comment: comment,
+                comment: comments,
                 user: { connect: { id: user.id } },
                 movie: { connect: { id: movie.id } }
             },

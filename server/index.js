@@ -76,6 +76,7 @@ app.post('/register', async (req, res) => {
 //Login 
 app.post('/login', async (req, res) => {
   userServices.login(req,res);
+  console.log(res.message)
   return res;
   
 });
@@ -99,6 +100,7 @@ app.get("/verify", userServices.verifyUser, (req,res) => {
 
 app.get('/logout', (req,res) => {
   res.clearCookie('token')
+  
   return res.json({status : true})
 })
 
@@ -131,10 +133,19 @@ app.get('/catalogs', async (req, res) => {
 });
 
 
-app.post('/review', async (req, res) => {
-  const data = req.body;
-  const review = await reviewServices.createReview(data);
-  return res.json(review);
+app.post('/review',userServices.verifyUser, async (req, res) => {
+  const { rating, comments, filmId } = req.body;
+  const userId = req.user.id;
+  const data = { userId, movieId: filmId, rating, comments };
+
+  try {
+    const review = await reviewServices.createReview(data);
+    return res.json(review);
+  }
+  catch (error) {
+    console.error('Error creating review:', error);
+    res.status(500).json({ error: 'Error creating review' });
+  }
 });
 
 app.get('/reviewid/:id', async (req, res) => {
