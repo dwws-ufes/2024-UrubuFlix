@@ -49,7 +49,7 @@ const User = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (window.confirm('Tem certeza que deseja deletar a conta?')) {
+    if (window.confirm('Are you sure you want to delete the account?')) {
       try {
         const response = await deleteAccount();
         if (response.status) {
