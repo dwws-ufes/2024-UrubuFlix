@@ -39,6 +39,10 @@ export const findReviewById = async (id) => {
     try {
         const review = await prisma.review.findUnique({
             where: { id: id },
+            include: {
+                user: true,
+                movie: true,
+            },
         });
         return review;
     } catch (err) {
@@ -51,6 +55,10 @@ export const findReviewByUser = async (userId) => {
     try {
         const reviews = await prisma.review.findMany({
             where: { userId: userId },
+            include: {
+                user: true,
+                movie: true,
+            },
         });
         return reviews;
     } catch (err) {

@@ -12,6 +12,7 @@ import * as userServices from './services/userServices.js';
 import * as catalogServices from './services/catalogServices.js';
 import * as movieServices from './services/movieServices.js';
 import * as genreENUM from './enum/genreENUM.js';
+import * as reviewServices from './services/reviewServices.js';
 import { exit } from 'process'
 
 dotenv.config()
@@ -127,4 +128,41 @@ app.get('/films/:id', async (req, res) => {
 app.get('/catalogs', async (req, res) => {
   const catalogs = await catalogServices.getAllCatalogs();
   res.json(catalogs);
+});
+
+
+app.post('/review', async (req, res) => {
+  const data = req.body;
+  const review = await reviewServices.createReview(data);
+  return res.json(review);
+});
+
+app.get('/reviewid/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid review ID' });
+    return;
+  }
+  const review = await reviewServices.findReviewById(id);
+  return res.json(review);
+});
+
+app.get('/reviewuser/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid user ID' });
+    return;
+  }
+  const reviews = await reviewServices.findReviewByUser(id);
+  return res.json(reviews);
+});
+
+app.get('/reviewmovie/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid movie ID' });
+    return;
+  }
+  const reviews = await reviewServices.findReviewByMovie(id);
+  return res.json(reviews);
 });
