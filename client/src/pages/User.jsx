@@ -37,7 +37,11 @@ const User = () => {
     try {
       const response = await logout();
       if (response.status) {
-        navigate('/');
+        if (window.location.pathname === '/') {
+          window.location.reload();
+        } else {
+          navigate('/');
+        }
       }
     } catch (error) {
       console.log(error);
@@ -45,7 +49,7 @@ const User = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (window.confirm('Tem certeza que deseja deletar a conta?')) {
+    if (window.confirm('Are you sure you want to delete the account?')) {
       try {
         const response = await deleteAccount();
         if (response.status) {
@@ -67,7 +71,7 @@ const User = () => {
         <div className="user-profile">
         
         <h2 className="username">{user.username}</h2>
-        <button className="button" onClick={() => alert('Lista de Filmes')}>
+        <button className="button" onClick={() => alert('List of films')}>
           Movie list
         </button>
         <button className="button" onClick={handleChangePassword}>

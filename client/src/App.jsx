@@ -7,6 +7,9 @@ import ResetPassword from './pages/ResetPassword'
 import Films from './pages/Films'
 import User from './pages/User'
 import FilmDetails from './pages/FilmDetails'
+import Movies from  './pages/Movies'
+import Category from './pages/Category'
+import Favorite from './pages/Favorite'
 
 function App() {
 
@@ -14,6 +17,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home/>}></Route>
+        <Route path='/movies' element={<Movies/>}></Route>
+        <Route path='/category' element={<Category/>}></Route>
+        <Route path='/favorite' element={<Favorite/>}></Route>
         <Route path='/register' element={<Register/>}></Route>
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/forgotPassword' element={<ForgotPassword/>}></Route>

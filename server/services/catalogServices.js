@@ -216,5 +216,5 @@ export const getAllCatalogs = async () => {
     } catch (err) {
         console.error('Error getting all catalogs', err);
         throw new Error('Error getting all catalogs');
-    }
+    }
 }

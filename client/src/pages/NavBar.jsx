@@ -55,9 +55,9 @@ function NavBar() {
           <nav>
             <ul className="top-menu flex-content">
               <li><Link to='/'>Home</Link></li>
-              <li><Link to='/'>Movies</Link></li>
-              <li><Link to='/'>Category</Link></li>
-              {user ? <li><Link to='/'>Favorite</Link></li> : <p></p>}
+              <li><Link to='/movies'>Movies</Link></li>
+              <li><Link to='/category'>Category</Link></li>
+              {user ? <li><Link to='/favorite'>Favorite</Link></li> : <p></p>}
             </ul>
           </nav>
           <div className="top-search">

@@ -11,10 +11,7 @@ function Home() {
       <NavBar></NavBar>
 
       <main className="main-content">
-        <div className='films'>
-          <Films></Films>
-        </div>
-      
+        
         <div className="title">
           <h1>The best movie review site</h1>
         </div>
