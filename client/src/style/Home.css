@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin&family=Heebo&family=Lato&family=PT+Sans&family=Work+Sans:wght@100;400&family=Roboto:wght@700&display=swap');
 
+.App {
+  position: relative;
+  background-image: url('../assets/image.jpeg');
+  background-size: auto;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.Footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -26,7 +40,7 @@ h2 {
 }
 
 p {
-  color: #B29F63;
+  color: #ffffff;
 }
 
 ul {
@@ -36,7 +50,7 @@ ul {
 
 a:link, a:visited, a:active {
   text-decoration: none;
-  color: #B29F63;
+  color: #ffffff;
 }
 
 a:hover {
@@ -146,7 +160,7 @@ button {
   font-family: 'Roboto', sans-serif;
   font-size: 1vmax;
   background: rgba(#ffffff, 0);
-  color: #B29F63;
+  color: #ffffff;
   cursor: pointer;
   outline: 0;
   border: none;
@@ -154,7 +168,7 @@ button {
 
 .top-menu {
   text-align: center;
-  color: #B29F63;
+  color: #ffffff;
   margin: 0 20px;
 }
 
@@ -206,7 +220,7 @@ button {
 
 .sublogin-content button {
   font-size: 1vmax;
-  background: #B29F63;
+  background: #ffffff;
   color: #b73223;
   cursor: pointer;
   outline: 0;
@@ -221,12 +235,13 @@ button {
 
 /* -------------- INDEX CONTENT -------------- */
 .main-content {
-  width: 76%;
+
   min-width: 320px;
-  height: auto;
+  width: 100vw;
+  height: 100vh; 
   margin: 0 auto;
   text-align: center;
-  -webkit-filter: none;
+  background-color: rgba(0, 0, 0, 0.461);
   z-index: 1;
 }
 
@@ -253,13 +268,36 @@ button {
 
 /* -------------- ABOUT WEBSITE -------------- */
 .about-website {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   height: auto;
   margin-bottom: 4%;
-  text-align: left;
-  background: rgba(0, 0, 0, 0.30);
+  text-align: center;
   border-top: 2px solid #b73223;
   border-bottom: 2px solid #b73223;
   font-size: 1vmax;
+}
+
+.about-website h1, .about-website h2 {
+  font-size: 2em; 
+  font-weight: 900; 
+  color: #fff;
+}
+
+.get-started-button {
+  width: 200px; 
+  height: 40px; 
+  padding: 10px 20px; 
+  font-size: 14px; 
+  text-align: center;
+  border: none;
+  background-color: #b73223;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .benefit-box div {

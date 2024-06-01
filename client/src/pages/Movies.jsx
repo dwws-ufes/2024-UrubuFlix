@@ -7,7 +7,7 @@ import Footer from './Footer';
 function Movies() {
 
     return (
-        <div className="App">
+        <div>
           <NavBar></NavBar>
     
           <main className="main-content">
