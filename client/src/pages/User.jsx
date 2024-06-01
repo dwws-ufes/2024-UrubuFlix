@@ -68,7 +68,7 @@ const User = () => {
           alt="Profile"
           className="profile-pic"
         />
-        <div className="user-profile">
+      <div className="user-profile">
         
         <h2 className="username">{user.username}</h2>
         <button className="button" onClick={() => alert('List of films')}>
