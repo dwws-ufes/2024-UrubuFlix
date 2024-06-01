@@ -135,6 +135,14 @@ app.get('/catalogs', async (req, res) => {
   res.json(catalogs);
 });
 
+app.get('/catalogs/:name', async (req, res) => {
+  const name = req.params.name;
+  const catalog = await catalogServices.findCatalogName(name);
+  res.json(catalog);
+});
+
+
+
 
 app.post('/review',userServices.verifyUser, async (req, res) => {
   const { rating, comments, filmId } = req.body;
@@ -161,6 +169,8 @@ app.get('/reviewid/:id', async (req, res) => {
   return res.json(review);
 });
 
+
+//retorna todas as reviews de um usuario
 app.get('/reviewuser/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -171,6 +181,7 @@ app.get('/reviewuser/:id', async (req, res) => {
   return res.json(reviews);
 });
 
+//retorna todas as reviews de um filme
 app.get('/reviewmovie/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -179,4 +190,56 @@ app.get('/reviewmovie/:id', async (req, res) => {
   }
   const reviews = await reviewServices.findReviewByMovie(id);
   return res.json(reviews);
+});
+
+// <---------------------- ROTAS DE USUÁRIOS ------------------>
+app.get('/users', async (req, res) => {
+  const users = await userServices.getAllUsers();
+  res.json(users);
+});
+
+app.get('/users/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid user ID' });
+    return;
+  }
+  const user = await userServices.findUserById(id);
+  res.json(user);
+});
+
+
+app.post('/addFavorite', userServices.verifyUser, async (req, res) => {
+  const movieId = req.body.filmId;
+  const userId = req.user.id;
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.addFavorite(req,res);
+})
+
+app.delete('/removeFavorite', userServices.verifyUser, async (req, res) => {
+  const movieId = req.body.filmId;
+  const userId = req.user.id;
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.removeFavorite(req,res);
+})
+
+app.get('/favorites/:id', userServices.verifyUser, async (req, res) => {
+  const userId = req.user.id;
+  const favorites = await userServices.getUserCatalog(userId);
+  res.json(favorites);
+})
+
+app.get('/isFavorite', userServices.verifyUser, async (req, res) => {
+  const userId = req.user.id;
+  const { movieId } = req.query;
+
+  try {
+    const favorite = await userServices.isFavorite(userId, parseInt(movieId, 10));
+    res.json({ isFavorite: favorite });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error checking favorite status' });
+  }
 });

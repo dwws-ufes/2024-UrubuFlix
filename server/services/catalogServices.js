@@ -120,25 +120,54 @@ export const addMovie= async (catalogId, movieId) => {
 };
 
 export const removeMovie = async (catalogId, movieId) => {
-    try {
-        const catalog = await prisma.catalog.update({
-            where: { id: catalogId },
-            data: {
-                movies: {
-                    disconnect: { id: movieId },
-                },
+    const existingEntry = await prisma.catalog_has_movie.findUnique({
+        where: {
+            catalog_id_movie_id: {
+                catalog_id: catalogId,
+                movie_id: movieId,
             },
-        });
-        return catalog;
-    } catch (err) {
-        console.error('Error removing movie', err);
-        throw new Error('Error removing movie');
+        },
+    });
+
+    if (existingEntry) {
+        try {
+            await prisma.catalog_has_movie.delete({
+                where: {
+                    catalog_id_movie_id: {
+                        catalog_id: catalogId,
+                        movie_id: movieId,
+                    },
+                },
+            });
+            return { status: true, message: 'Movie removed successfully' };
+        } catch (err) {
+            console.error('Error removing movie', err);
+            throw new Error('Error removing movie');
+        }
+    }
+    else{
+        return { status: false, message: 'Movie not found in catalog' };
     }
 };
 export const findCatalogID = async (id) => {
     try {
         const catalog = await prisma.catalog.findUnique({
             where: { id: id },
+            include: {
+                genres: {
+                    include: {
+                        genre: true,
+                    },
+                },
+            },
+            include: {
+                catalog_has_movie:{
+                    include:{
+                        movie: true,
+                    },
+                
+                }, 
+            }, 
         });
         return catalog;
     } catch (err) {
@@ -150,6 +179,21 @@ export const findCatalogName = async (name) => {
     try {
         const catalog = await prisma.catalog.findUnique({
             where: { name: name },
+            include: {
+                genres: {
+                    include: {
+                        genre: true,
+                    },
+                },
+            },
+            include: {
+                catalog_has_movie:{
+                    include:{
+                        movie: true,
+                    },
+                
+                }, 
+            }, 
         });
         return catalog;
     } catch (err) {

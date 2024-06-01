@@ -12,9 +12,12 @@ const FilmDetails = () => {
   const [film, setFilm] = useState({});
   const [comments, setComments] = useState(''); // Alterado para string vazia
   const [rating, setRating] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [user, setUser] = useState({});
 
   Axios.defaults.withCredentials = true;
 
+  //pega as informações do filme
   useEffect(() => {
     Axios.get(`http://localhost:3002/films/${id}`)
       .then((res) => {
@@ -26,6 +29,24 @@ const FilmDetails = () => {
       })
       .catch(error => console.log('Error:', error));
   }, [id]);
+
+  //verifica se o usuário está logado e pega as informações do usuário
+  useEffect(() => {
+    Axios.get('http://localhost:3002/verify', {
+      withCredentials: true
+    }
+    ) 
+    .then((res) => {
+      if (res.data) {
+        setUser(res.data);
+        checkIfFavorite(res.data.id);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
 
   const handleAddReview = async () => {
   try {
@@ -51,9 +72,61 @@ const FilmDetails = () => {
     handleAddReview();
   };
 
+  const handleAddFavorites = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.post('http://localhost:3002/addFavorite', { filmId: id }, {
+        withCredentials: true
+      })
+        .then((res) => {
+          if (res.data) {
+            alert('Movie added to favorites');
+            setIsFavorite(true);
+          } else {
+            console.log('Error:', res.error);
+          }
+        })
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  const handleRemoveFavorites = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.delete('http://localhost:3002/removeFavorite', { 
+        data: { filmId: id },
+        withCredentials: true
+      })
+        .then((res) => {
+          if (res.data) {
+            alert('Movie removed from favorites');
+            setIsFavorite(false);
+          } else {
+            console.log('Error:', res.error);
+          }
+        })
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+
+  const checkIfFavorite = async (userId) => {
+    try {
+      const response = await Axios.get(`http://localhost:3002/isFavorite?movieId=${id}`, {
+        headers: {
+          'Authorization': `Bearer ${userId}`
+        }
+      });
+      setIsFavorite(response.data.isFavorite);
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
 
   return (
     <div className='app'>
@@ -76,7 +149,11 @@ const FilmDetails = () => {
             ).join(', ')
             }</p>
             <p>Synopsis: {film.synopsis}</p>
-            <button className='favorite'>Add to Favorites</button>
+            {isFavorite ? (
+              <button className='favorite' onClick={handleRemoveFavorites}>Remove from Favorites</button>
+            ) : (
+              <button className='favorite' onClick={handleAddFavorites}>Add to Favorites</button>
+            )}
           </div>
         </div>
         <hr />

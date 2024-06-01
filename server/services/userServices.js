@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 
 import * as catalogServices from "./catalogServices.js";
+import * as moviesServices from "./movieServices.js";
 
 export const createUser = async (data) => {
     const { username, email, password } = data;
@@ -78,6 +79,37 @@ export const findUserByEmail = async (email) => {
     }
   };
 
+export const getAllUsers = async () => {
+    try {
+      const users = await prisma.user.findMany();
+      return users;
+    } catch (err) {
+      console.error('Error finding all users', err);
+      throw new Error('Error finding all users');
+    }
+};
+export const getUserCatalog = async (userId) => {
+    try {
+      const user = await prisma.user.findFirst({
+        where: { id: userId },
+        include: {
+          catalog:{
+            include: {
+              catalog_has_movie: {
+                include: {
+                  movie: true
+                }
+              }
+            }
+          }
+        },
+      });
+      return user.catalog;
+    } catch (err) {
+      console.error('Error finding user catalog', err);
+      throw new Error('Error finding user catalog');
+    }
+};
 export const register = async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
@@ -324,4 +356,55 @@ export const removeAdmin = async (req, res) => {
     console.log(err);
     return res.json("error")
   }
+};
+
+export const getFavorites = async (req, res) => {
+  const userId = req.body.userId;
+  const catalog = await getUserCatalog(userId);
+  const movies = await catalogServices.getMovies(catalog.id);
+
+  return res.json(movies);
+}
+
+
+export const addFavorite = async (req,res) => {
+  const { userId, movieId } = req.body;
+  const user = await findUserById(userId);
+  const catalog = await getUserCatalog(user.id);
+  const movie_id = Number(movieId);
+  try{
+    await catalogServices.addMovie(catalog.id, movie_id);
+    return res.json({status: true, message: 'Movie added to favorites'});
+  }
+  catch (err) {
+    console.error(err);
+    return res.json({status: false, message: 'Error adding movie to favorites'});
+  }
+  
+};
+
+export const removeFavorite = async (req, res) => {
+  const { userId, movieId } = req.body;
+  const user = await findUserById(userId);
+  const catalog = await getUserCatalog(user.id);
+  const movie_id = Number(movieId);
+  try{
+    await catalogServices.removeMovie(catalog.id, movie_id);
+    return res.json({status: true, message: 'Movie removed from favorites'});
+  }
+  catch (err) {
+    console.error(err);
+    return res.json({status: false, message: 'Error removing movie from favorites'});
+  }
+}
+
+export const isFavorite = async (userId, movieId) => {
+  const catalog = await getUserCatalog(userId);
+  const favorite = await prisma.catalog_has_movie.findFirst({
+    where: {
+      catalog_id: catalog.id,
+      movie_id: movieId
+    }
+  });
+  return favorite !== null;
 };
