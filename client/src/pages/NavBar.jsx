@@ -32,14 +32,6 @@ function NavBar() {
     fetchUser();
   }, [navigate]);
 
-  function handleLogin(){
-    navigate('/login')
-    
-  }
-  function handleRegister(){
-    navigate('/register')
-  }
-
   function mudar(){
     setShowComponent(true)
   }
@@ -54,7 +46,6 @@ function NavBar() {
         <div className="top-center flex-content">
           <nav>
             <ul className="top-menu flex-content">
-              {/* <li><Link to='/'>Home</Link></li> */}
               {user ? <p></p> : <li><Link to='/'>Home</Link></li>}
               <li><Link to='/movies'>Movies</Link></li>
               <li><Link to='/category'>Category</Link></li>
@@ -81,16 +72,6 @@ function NavBar() {
             <User/>
          : 
         <div className="top-right">
-          <div className="sublogin">
-            <div>
-              <button className="subloginbtn">Login <br />or Register <span className="fa fa-caret-down"></span></button>
-            </div>
-            <div className="sublogin-content">
-              <button type="button" title="Login" onClick={handleLogin}>Login</button>
-              <p>or</p>
-              <button type="button" title="Register" onClick={handleRegister}>Register</button>
-            </div>
-          </div>
         </div>
         }
       </header>
