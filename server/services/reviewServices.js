@@ -6,14 +6,18 @@ export const createReview = async (data) => {
     const { userId, movieId, rating, comments } = data;
     try {
         const user = await userServices.findUserById(userId);
+        
         const movie_id = Number(movieId);
         const movie = await movieServices.findMovieById(movie_id);
-        const review = await prisma.review.create({
-            data: {
+        
+        const review = await prisma.review.upsert({
+            where: { user_id_movie_id: { user_id: user.id, movie_id: movie.id } },
+            update: { rating: rating, comment: comments },
+            create: {
                 rating: rating,
                 comment: comments,
                 user: { connect: { id: user.id } },
-                movie: { connect: { id: movie.id } }
+                movie: { connect: { id: movie.id } },
             },
         });
         return review;
@@ -35,14 +39,11 @@ export const deleteReview = async (id) => {
     }
 };
 
-export const findReviewById = async (id) => {
+
+export const findReviewById = async (userId, movieId) => {
     try {
         const review = await prisma.review.findUnique({
-            where: { id: id },
-            include: {
-                user: true,
-                movie: true,
-            },
+           where: { userId_movieId: { userId: userId, movieId: movieId } },
         });
         return review;
     } catch (err) {
@@ -70,7 +71,11 @@ export const findReviewByUser = async (userId) => {
 export const findReviewByMovie = async (movieId) => {
     try {
         const reviews = await prisma.review.findMany({
-            where: { movieId: movieId },
+            where: { movie_id: movieId },
+            include: {
+                user: true,
+                movie: true,
+            },
         });
         return reviews;
     } catch (err) {

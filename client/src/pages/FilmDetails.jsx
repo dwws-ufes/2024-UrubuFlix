@@ -14,6 +14,7 @@ const FilmDetails = () => {
   const [rating, setRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   Axios.defaults.withCredentials = true;
 
@@ -47,6 +48,25 @@ const FilmDetails = () => {
     });
   }, []);
 
+  useEffect(() => {
+    fetchReviews();
+  }, [id]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await Axios.get(`http://localhost:3002/reviewMovie/${id}`,{
+        withCredentials: true
+      });
+      if (response.data) {
+        setReviews(response.data);
+      } else {
+        console.log('Error fetching reviews:', response.error);
+      }
+    } catch (error) {
+      console.log('Error fetching reviews:', error);
+    }
+  };
+
 
   const handleAddReview = async () => {
   try {
@@ -57,6 +77,7 @@ const FilmDetails = () => {
     .then((res) => {
       if (res.data) {
         setComments(''); // Atualiza o estado dos comentários
+        fetchReviews();
         alert('Review added successfully');
       } else {
         console.log('Error:', res.error);
@@ -183,6 +204,18 @@ const FilmDetails = () => {
             />
             <button type="submit">Enviar</button>
           </form>
+          <div className='reviews'>
+            <h3>Reviews</h3>
+            {reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <div key={index} className='review'>
+                  <p><strong>{review.user.username}</strong>: {review.comment} Rating: {review.rating} Review at: {review.date}</p>
+                </div>
+              ))
+            ) : (
+              <p>No reviews yet.</p>
+            )}
+          </div>
         </div>
       </div>
       <Footer />

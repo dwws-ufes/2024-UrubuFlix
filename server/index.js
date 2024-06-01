@@ -182,7 +182,7 @@ app.get('/reviewuser/:id', async (req, res) => {
 });
 
 //retorna todas as reviews de um filme
-app.get('/reviewmovie/:id', async (req, res) => {
+app.get('/reviewMovie/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
     res.status(400).json({ error: 'Invalid movie ID' });
