@@ -11,7 +11,6 @@ function Home() {
       <NavBar></NavBar>
 
       <main className="main-content">
-        
         <div className="about-website">
           <h1>Track films you’ve watched.</h1>
           <h2>Save those you want to see.</h2>

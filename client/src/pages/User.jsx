@@ -1,7 +1,7 @@
 // src/components/User.js
 import React, { useEffect, useState } from 'react';
 import '../style/User.css';
-import urubuUser from '../assets/urubu.png'; // Importando a imagem diretamente
+import urubuUser from '../assets/urubu.png'; 
 import { useNavigate } from 'react-router-dom';
 import { verifyUser, logout, deleteAccount } from '../services/Axios';
 
