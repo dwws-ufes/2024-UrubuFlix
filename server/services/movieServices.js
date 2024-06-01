@@ -386,3 +386,20 @@ export const getMoviesByGenre = async (genreID) => {
         throw new Error('Error finding movies');
     }
 };
+
+export const getMoviesByFilter = async (movie) => {
+    try {
+        const movies = await prisma.movie.findMany({
+            where : {
+                name: {
+                    contains: movie,
+                  },
+            }
+        })
+        return movies
+    }
+    catch (error){
+        console.log(error);
+        throw new Error('Error finding movies');
+    } 
+}

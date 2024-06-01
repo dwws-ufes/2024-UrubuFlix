@@ -243,3 +243,14 @@ app.get('/isFavorite', userServices.verifyUser, async (req, res) => {
     res.status(500).json({ error: 'Error checking favorite status' });
   }
 });
+// <---------------------- Filter  ------------------>
+app.get('/search', async (req, res) => {
+  const movie = req.query.q.toLowerCase()
+  if (movie) {
+    const response = await movieServices.getMoviesByFilter(movie)
+    return res.json(response)
+  }
+
+  return res.status(400).json({ error: 'Invalid movie' });
+
+})

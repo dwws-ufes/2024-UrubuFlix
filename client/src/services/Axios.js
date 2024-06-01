@@ -91,6 +91,15 @@ export const deleteAccount = async () => {
   }
 };
 
-
+//================ Search   =================== //
+export const searchMovie = async (movie) => {
+  try {
+    const response = await api.get(`/search?q=${movie}`)
+    return response.data;
+  }
+  catch (error) {
+    throw error;
+  }
+}
 
 export default api;

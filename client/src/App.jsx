@@ -10,6 +10,7 @@ import FilmDetails from './pages/FilmDetails'
 import Movies from  './pages/Movies'
 import Category from './pages/Category'
 import Favorite from './pages/Favorite'
+import Search from './pages/Search'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
         <Route path='/films' element={<Films/>}></Route>
         <Route path='/user' element={<User/>}></Route>
         <Route path='/film/:id' element={<FilmDetails/>}></Route>
+        <Route path='/search' element={<Search/>}></Route>
       </Routes>
     </BrowserRouter>
   )
