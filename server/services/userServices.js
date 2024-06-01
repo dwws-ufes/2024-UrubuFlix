@@ -78,6 +78,37 @@ export const findUserByEmail = async (email) => {
     }
   };
 
+export const getAllUsers = async () => {
+    try {
+      const users = await prisma.user.findMany();
+      return users;
+    } catch (err) {
+      console.error('Error finding all users', err);
+      throw new Error('Error finding all users');
+    }
+};
+export const getUserCatalog = async (userId) => {
+    try {
+      const user = await prisma.user.findFirst({
+        where: { id: userId },
+        include: {
+          catalog:{
+            include: {
+              catalog_has_movie: {
+                include: {
+                  movie: true
+                }
+              }
+            }
+          }
+        },
+      });
+      return user.catalog;
+    } catch (err) {
+      console.error('Error finding user catalog', err);
+      throw new Error('Error finding user catalog');
+    }
+};
 export const register = async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
@@ -325,3 +356,45 @@ export const removeAdmin = async (req, res) => {
     return res.json("error")
   }
 };
+
+export const getFavorites = async (req, res) => {
+  const userId = req.body.userId;
+  const catalog = await getUserCatalog(userId);
+  const movies = await catalogServices.getMovies(catalog.id);
+
+  return res.json(movies);
+}
+
+
+export const addFavorite = async (req, res) => {
+  const movieId = req.body.movieId;
+  const userId = req.body.userId;
+
+  const catalog = await getUserCatalog(userId);
+
+  try{
+    await catalogServices.addMovie(catalog.id, movieId);
+    return res.json({status: true, message: 'Movie added to favorites'});
+  }
+  catch (err) {
+    console.error(err);
+    return res.json({status: false, message: 'Error adding movie to favorites'});
+  }
+  
+};
+
+export const removeFavorite = async (req, res) => {
+  const movieId = req.body.movieId;
+  const userId = req.body.userId;
+
+  const catalog = await getUserCatalog(userId);
+
+  try{
+    await catalogServices.removeMovie(catalog.id, movieId);
+    return res.json({status: true, message: 'Movie removed from favorites'});
+  }
+  catch (err) {
+    console.error(err);
+    return res.json({status: false, message: 'Error removing movie from favorites'});
+  }
+}
