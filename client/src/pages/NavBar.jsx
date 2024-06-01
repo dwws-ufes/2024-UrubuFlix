@@ -32,15 +32,7 @@ function NavBar() {
     fetchUser();
   }, [navigate]);
 
-  function handleLogin(){
-    navigate('/login')
-    
-  }
-  function handleRegister(){
-    navigate('/register')
-  }
 
-  
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -51,7 +43,6 @@ function NavBar() {
       console.log(error);
     }
   }
-  
   
 
 
