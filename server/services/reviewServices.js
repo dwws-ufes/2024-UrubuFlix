@@ -4,20 +4,15 @@ import * as movieServices from "./movieServices.js";
 
 export const createReview = async (data) => {
     const { userId, movieId, rating, comments } = data;
-    try {
-        const user = await userServices.findUserById(userId);
-        
-        const movie_id = Number(movieId);
-        const movie = await movieServices.findMovieById(movie_id);
-        
+    try { 
         const review = await prisma.review.upsert({
-            where: { user_id_movie_id: { user_id: user.id, movie_id: movie.id } },
+            where: { user_id_movie_id: { user_id: userId, movie_id: movieId } },
             update: { rating: rating, comment: comments },
             create: {
                 rating: rating,
                 comment: comments,
-                user: { connect: { id: user.id } },
-                movie: { connect: { id: movie.id } },
+                user: { connect: { id: userId } },
+                movie: { connect: { id: movieId } },
             },
         });
         return review;
@@ -28,15 +23,11 @@ export const createReview = async (data) => {
 };
 
 export const deleteReview = async (data) => {
-    const { userid, movieid } = data;
-    
-    const movie_id = Number(movieid);
-    const user = await userServices.findUserById(userid);
-    const movie = await movieServices.findMovieById(movie_id);
+    const { userId, movieId } = data;
         
     try {
         await prisma.review.delete({
-            where: { user_id_movie_id: { user_id: user.id, movie_id: movie.id } }
+            where: { user_id_movie_id: { user_id: userId, movie_id:movieId } }
         });
         return;
     } catch (err) {

@@ -222,9 +222,15 @@ const FilmDetails = () => {
           <div className='reviews'>
             <h3>Reviews</h3>
             {reviews.length > 0 ? (
-              reviews.map((review, index) => (
-                <div key={index} className='review'>
-                  <p><strong>{review.user.username}</strong>: {review.comment} Rating: {review.rating} Review at: {review.date} <button onClick={handleRemoveReview}>X</button></p>
+              reviews.map((review) => (
+                <div key={review.id} className='review'>
+                  {user && review.userId === user.id && (
+                    <button onClick={handleRemoveReview}>X</button>
+                  )}
+                  <div className='review-content'>
+                    <p><strong>{review.user.username}</strong>: {review.comment}</p>
+                    <p>Rating: {review.rating}</p>
+                  </div>
                 </div>
               ))
             ) : (

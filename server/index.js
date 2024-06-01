@@ -76,7 +76,6 @@ app.post('/register', async (req, res) => {
 //Login 
 app.post('/login', async (req, res) => {
   userServices.login(req,res);
-  console.log(res.message)
   return res;
   
 });
@@ -146,8 +145,11 @@ app.get('/catalogs/:name', async (req, res) => {
 
 app.post('/review',userServices.verifyUser, async (req, res) => {
   const { rating, comments, filmId } = req.body;
-  const userId = req.user.id;
-  const data = { userId, movieId: filmId, rating, comments };
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const movieId=Number(filmId);
+
+  const data = { userId, movieId, rating, comments };
 
   try {
     const review = await reviewServices.createReview(data);
@@ -193,7 +195,11 @@ app.get('/reviewMovie/:id', async (req, res) => {
 });
 
 app.delete('/review/',userServices.verifyUser, async (req, res) => {
-  const data = {userid: req.user.id, movieid: req.body.movieid}
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const movieId=Number(req.body.movieid);
+
+  const data = {userId, movieId}
   try {
     await reviewServices.deleteReview(data);
     res.json({ status: true, message: 'Review deleted successfully' });
@@ -220,29 +226,34 @@ app.get('/users/:id', async (req, res) => {
 
 
 app.post('/addFavorite', userServices.verifyUser, async (req, res) => {
-  const movieId = req.body.filmId;
-  const userId = req.user.id;
+  const movieId = Number(req.body.filmId);
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
   req.body.userId = userId;
   req.body.movieId = movieId;
   await userServices.addFavorite(req,res);
 })
 
 app.delete('/removeFavorite', userServices.verifyUser, async (req, res) => {
-  const movieId = req.body.filmId;
-  const userId = req.user.id;
+  const movieId = Number(req.body.filmId);
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
   req.body.userId = userId;
   req.body.movieId = movieId;
   await userServices.removeFavorite(req,res);
 })
 
 app.get('/favorites/:id', userServices.verifyUser, async (req, res) => {
-  const userId = req.user.id;
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
   const favorites = await userServices.getUserCatalog(userId);
   res.json(favorites);
 })
 
 app.get('/isFavorite', userServices.verifyUser, async (req, res) => {
-  const userId = req.user.id;
+
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
   const { movieId } = req.query;
 
   try {

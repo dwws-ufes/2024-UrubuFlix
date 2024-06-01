@@ -144,11 +144,13 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password} = req.body;
    
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: {
       email:email
     }
   });
+
+  console.log(user)
 
   if ( !email || !password) {
     console.log('Please fill in all fields');
@@ -167,6 +169,7 @@ export const login = async (req, res) => {
   }
 
   const token = jwt.sign({username: user.username, email : user.email}, process.env.KEY, {expiresIn: '3h'})
+  console.log(token)
   res.cookie('token', token, {httpOnly: true ,maxAge:3*60*60*1000}) //3h em milissegundos
   return res.json({status: true, message:"login successfully"})
 
@@ -180,7 +183,7 @@ export const verifyUser = async (req, res, next) => {
       if (!token){
         return res.json({status: false, message : "no token"})
       }
-  
+      
       const decoded = jwt.verify(token, process.env.KEY)
       req.user = decoded
       next()
@@ -369,11 +372,9 @@ export const getFavorites = async (req, res) => {
 
 export const addFavorite = async (req,res) => {
   const { userId, movieId } = req.body;
-  const user = await findUserById(userId);
-  const catalog = await getUserCatalog(user.id);
-  const movie_id = Number(movieId);
+  const catalog = await getUserCatalog(userId);
   try{
-    await catalogServices.addMovie(catalog.id, movie_id);
+    await catalogServices.addMovie(catalog.id, movieId);
     return res.json({status: true, message: 'Movie added to favorites'});
   }
   catch (err) {
@@ -385,11 +386,9 @@ export const addFavorite = async (req,res) => {
 
 export const removeFavorite = async (req, res) => {
   const { userId, movieId } = req.body;
-  const user = await findUserById(userId);
-  const catalog = await getUserCatalog(user.id);
-  const movie_id = Number(movieId);
+  const catalog = await getUserCatalog(userId);
   try{
-    await catalogServices.removeMovie(catalog.id, movie_id);
+    await catalogServices.removeMovie(catalog.id, movieId);
     return res.json({status: true, message: 'Movie removed from favorites'});
   }
   catch (err) {
