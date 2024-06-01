@@ -180,3 +180,15 @@ app.get('/reviewmovie/:id', async (req, res) => {
   const reviews = await reviewServices.findReviewByMovie(id);
   return res.json(reviews);
 });
+
+// <---------------------- Filter  ------------------>
+app.get('/search', async (req, res) => {
+  const movie = req.query.q.toLowerCase()
+  if (movie) {
+    const response = await movieServices.getMoviesByFilter(movie)
+    return res.json(response)
+  }
+
+  return res.status(400).json({ error: 'Invalid movie' });
+
+})

@@ -3,16 +3,16 @@ import '../style/Home.css';
 import logo from '../assets/urubuflix.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { verifyUser } from '../services/Axios';
-import urubuUser from '../assets/urubu.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import User from './User'
+import {searchMovie} from '../services/Axios'
 
 
 function NavBar() {
   const navigate =  useNavigate()
   const [user, setUser] = useState()
-  const [showComponent, setShowComponent] = useState(false);
+  const [search, setSearch] = useState('');
   
 
   useEffect(() => {
@@ -34,15 +34,25 @@ function NavBar() {
 
   function handleLogin(){
     navigate('/login')
-    
   }
   function handleRegister(){
     navigate('/register')
   }
 
-  function mudar(){
-    setShowComponent(true)
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await searchMovie(search)
+      navigate('/search', {state : { movies : response}})
+    }
+    catch (error) {
+      console.log(error);
+    }
   }
+  
+  
+
 
   return (
     <header className="top flex-content">
@@ -54,7 +64,6 @@ function NavBar() {
         <div className="top-center flex-content">
           <nav>
             <ul className="top-menu flex-content">
-              {/* <li><Link to='/'>Home</Link></li> */}
               {user ? <p></p> : <li><Link to='/'>Home</Link></li>}
               <li><Link to='/movies'>Movies</Link></li>
               <li><Link to='/category'>Category</Link></li>
@@ -65,10 +74,10 @@ function NavBar() {
             <div className="content-search">
               <form className="flex-content" method="post">
                 <fieldset className="search-bar">
-                  <input type="text" placeholder="Search for a movie..." alt="Enter a movie to search here" />
+                  <input onChange={(event) => {setSearch(event.target.value)}} value={search}type="text" placeholder="Search for a movie..." alt="Enter a movie to search here" />
                 </fieldset>
                 <fieldset className="flex-content">
-                <button type="button" title="Search" className="search-button">
+                <button  onClick={handleSearch} type="button" title="Search" className="search-button">
                   <FontAwesomeIcon icon={faSearch} />
                 </button>
                 </fieldset>

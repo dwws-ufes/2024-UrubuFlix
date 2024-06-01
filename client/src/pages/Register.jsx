@@ -17,7 +17,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      console.log(username,email,password, confirmPassword);
+      //console.log(username,email,password, confirmPassword);
       const response = await register(username, email, password, confirmPassword);
       if (response.status) {
         alert('Account created successfully!');
