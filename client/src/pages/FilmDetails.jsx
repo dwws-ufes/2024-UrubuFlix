@@ -202,7 +202,7 @@ const FilmDetails = () => {
               onChange={(event) => setComments(event.target.value)}
               placeholder="Enter your comment here"
             />
-            <button type="submit">Enviar</button>
+            <button type="submit">Send</button>
           </form>
           <div className='reviews'>
             <h3>Reviews</h3>
