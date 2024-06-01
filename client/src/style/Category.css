@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Heebo&family=Lato&family=PT+Sans&family=Work+Sans:wght@100;400&family=Roboto:wght@700&display=swap');
+
+
+.content {
+  width: 76%;
+  min-width: 320px;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.content img:hover {
+  transition: .3s;
+  -webkit-filter: brightness(120%);
+  filter: brightness(120%);
+}
+
+
+/* -------------- BASEBOARD -------------- */
+footer {
+  width: 100%;
+  min-width: 320px;
+  height: auto;
+  background: rgba(0, 0, 0, 0.85);
+  font-size: 0.8vmax;
+  text-align: center;
+}
+
+footer div{
+  margin-top: 20px;
+}

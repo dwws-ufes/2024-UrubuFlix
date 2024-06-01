@@ -54,7 +54,8 @@ function NavBar() {
         <div className="top-center flex-content">
           <nav>
             <ul className="top-menu flex-content">
-              <li><Link to='/'>Home</Link></li>
+              {/* <li><Link to='/'>Home</Link></li> */}
+              {user ? <p></p> : <li><Link to='/'>Home</Link></li>}
               <li><Link to='/movies'>Movies</Link></li>
               <li><Link to='/category'>Category</Link></li>
               {user ? <li><Link to='/favorite'>Favorite</Link></li> : <p></p>}

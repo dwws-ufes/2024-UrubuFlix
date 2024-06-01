@@ -18,7 +18,7 @@ function Login() {
       const response = await login(email, password);
 
       if (response.status) {
-        navigate('/');
+        navigate('/movies');
       } 
       else if (!response.status && response.message === 'Empty field') {
         alert('Please fill in all fields');

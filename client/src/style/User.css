@@ -5,7 +5,12 @@
   border-radius: 45px;
   margin-left: 20px;
 }
-.foto-logo:hover .user-profile{
+
+.foto-logo:hover .user-profile,
+.user-profile:hover {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.5s linear;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,7 +22,11 @@
   height: 25vmax;
   font-size: 1vmax;
 }
+
 .user-profile {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.5s, opacity 0.5s linear;
   display: none;
   background: blue;
 }
