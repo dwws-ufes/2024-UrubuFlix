@@ -132,6 +132,21 @@ const FilmDetails = () => {
     }
   };
 
+  const handleRemoveReview = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.delete(`http://localhost:3002/review`,
+        {
+          data: {movieid: id},
+          withCredentials: true
+        });
+      fetchReviews();
+      alert('Review removed successfully');
+    } catch (error) {
+      console.log('Error removing review:', error);
+    }
+  };
+
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
@@ -209,7 +224,7 @@ const FilmDetails = () => {
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <div key={index} className='review'>
-                  <p><strong>{review.user.username}</strong>: {review.comment} Rating: {review.rating} Review at: {review.date}</p>
+                  <p><strong>{review.user.username}</strong>: {review.comment} Rating: {review.rating} Review at: {review.date} <button onClick={handleRemoveReview}>X</button></p>
                 </div>
               ))
             ) : (

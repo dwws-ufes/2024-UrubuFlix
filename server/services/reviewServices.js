@@ -27,12 +27,18 @@ export const createReview = async (data) => {
     }
 };
 
-export const deleteReview = async (id) => {
+export const deleteReview = async (data) => {
+    const { userid, movieid } = data;
+    
+    const movie_id = Number(movieid);
+    const user = await userServices.findUserById(userid);
+    const movie = await movieServices.findMovieById(movie_id);
+        
     try {
-        const review = await prisma.review.delete({
-            where: { id: id },
+        await prisma.review.delete({
+            where: { user_id_movie_id: { user_id: user.id, movie_id: movie.id } }
         });
-        return review;
+        return;
     } catch (err) {
         console.error('Error deleting review', err);
         throw new Error('Error deleting review');

@@ -192,6 +192,16 @@ app.get('/reviewMovie/:id', async (req, res) => {
   return res.json(reviews);
 });
 
+app.delete('/review/',userServices.verifyUser, async (req, res) => {
+  const data = {userid: req.user.id, movieid: req.body.movieid}
+  try {
+    await reviewServices.deleteReview(data);
+    res.json({ status: true, message: 'Review deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).json({ error: 'Error deleting review' });
+  }
+});
 // <---------------------- ROTAS DE USUÁRIOS ------------------>
 app.get('/users', async (req, res) => {
   const users = await userServices.getAllUsers();
