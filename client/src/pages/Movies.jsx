@@ -1,15 +1,21 @@
 import React from 'react'
+import '../style/Home.css';
 import Films from './Films';
 import NavBar from './NavBar';
 import Footer from './Footer';
-
 
 function Movies() {
 
     return (
         <div>
           <NavBar></NavBar>
-          <Films></Films>
+    
+          <main className="main-content">
+            <div className='films'>
+              <Films></Films>
+            </div>
+          </main>
+    
           <Footer/>
         </div>
       );
