@@ -134,7 +134,6 @@ app.get('/catalogs', async (req, res) => {
   const catalogs = await catalogServices.getAllCatalogs();
   res.json(catalogs);
 });
-<<<<<<< HEAD
 
 
 app.post('/review',userServices.verifyUser, async (req, res) => {
@@ -181,5 +180,3 @@ app.get('/reviewmovie/:id', async (req, res) => {
   const reviews = await reviewServices.findReviewByMovie(id);
   return res.json(reviews);
 });
-=======
->>>>>>> reorg_paginas
