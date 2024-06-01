@@ -135,6 +135,14 @@ app.get('/catalogs', async (req, res) => {
   res.json(catalogs);
 });
 
+app.get('/catalogs/:name', async (req, res) => {
+  const name = req.params.name;
+  const catalog = await catalogServices.findCatalogName(name);
+  res.json(catalog);
+});
+
+
+
 
 app.post('/review',userServices.verifyUser, async (req, res) => {
   const { rating, comments, filmId } = req.body;
@@ -222,3 +230,16 @@ app.get('/favorites/:id', userServices.verifyUser, async (req, res) => {
   const favorites = await userServices.getUserCatalog(userId);
   res.json(favorites);
 })
+
+app.get('/isFavorite', userServices.verifyUser, async (req, res) => {
+  const userId = req.user.id;
+  const { movieId } = req.query;
+
+  try {
+    const favorite = await userServices.isFavorite(userId, parseInt(movieId, 10));
+    res.json({ isFavorite: favorite });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error checking favorite status' });
+  }
+});

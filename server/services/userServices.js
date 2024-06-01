@@ -384,12 +384,10 @@ export const addFavorite = async (req,res) => {
 };
 
 export const removeFavorite = async (req, res) => {
-
   const { userId, movieId } = req.body;
   const user = await findUserById(userId);
   const catalog = await getUserCatalog(user.id);
   const movie_id = Number(movieId);
-
   try{
     await catalogServices.removeMovie(catalog.id, movie_id);
     return res.json({status: true, message: 'Movie removed from favorites'});
@@ -399,3 +397,14 @@ export const removeFavorite = async (req, res) => {
     return res.json({status: false, message: 'Error removing movie from favorites'});
   }
 }
+
+export const isFavorite = async (userId, movieId) => {
+  const catalog = await getUserCatalog(userId);
+  const favorite = await prisma.catalog_has_movie.findFirst({
+    where: {
+      catalog_id: catalog.id,
+      movie_id: movieId
+    }
+  });
+  return favorite !== null;
+};
