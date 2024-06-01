@@ -202,17 +202,19 @@ app.get('/users/:id', async (req, res) => {
 
 
 app.post('/addFavorite', userServices.verifyUser, async (req, res) => {
-  const movieId = req.body.movieId;
+  const movieId = req.body.filmId;
   const userId = req.user.id;
-  const favorite = await userServices.addFavorite(userId, movieId);
-  res.json(favorite);
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.addFavorite(req,res);
 })
 
 app.delete('/removeFavorite', userServices.verifyUser, async (req, res) => {
-  const movieId = req.body.movieId;
+  const movieId = req.body.filmId;
   const userId = req.user.id;
-  const favorite = await userServices.removeFavorite(userId, movieId);
-  res.json(favorite);
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.removeFavorite(req,res);
 })
 
 app.get('/favorites/:id', userServices.verifyUser, async (req, res) => {

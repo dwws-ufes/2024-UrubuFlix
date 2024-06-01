@@ -51,6 +51,24 @@ const FilmDetails = () => {
     handleAddReview();
   };
 
+  const handleAddFavorites = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.post('http://localhost:3002/addFavorite', { filmId: id }, {
+        withCredentials: true
+      })
+        .then((res) => {
+          if (res.data) {
+            alert('Movie added to favorites');
+          } else {
+            console.log('Error:', res.error);
+          }
+        })
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
@@ -76,7 +94,7 @@ const FilmDetails = () => {
             ).join(', ')
             }</p>
             <p>Synopsis: {film.synopsis}</p>
-            <button className='favorite'>Add to Favorites</button>
+            <button onClick={handleAddFavorites} className='favorite'>Add to Favorites</button>
           </div>
         </div>
         <hr />

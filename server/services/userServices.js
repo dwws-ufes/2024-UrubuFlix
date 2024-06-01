@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 
 import * as catalogServices from "./catalogServices.js";
+import * as moviesServices from "./movieServices.js";
 
 export const createUser = async (data) => {
     const { username, email, password } = data;
@@ -366,14 +367,13 @@ export const getFavorites = async (req, res) => {
 }
 
 
-export const addFavorite = async (req, res) => {
-  const movieId = req.body.movieId;
-  const userId = req.body.userId;
-
-  const catalog = await getUserCatalog(userId);
-
+export const addFavorite = async (req,res) => {
+  const { userId, movieId } = req.body;
+  const user = await findUserById(userId);
+  const catalog = await getUserCatalog(user.id);
+  const movie_id = Number(movieId);
   try{
-    await catalogServices.addMovie(catalog.id, movieId);
+    await catalogServices.addMovie(catalog.id, movie_id);
     return res.json({status: true, message: 'Movie added to favorites'});
   }
   catch (err) {
@@ -384,13 +384,14 @@ export const addFavorite = async (req, res) => {
 };
 
 export const removeFavorite = async (req, res) => {
-  const movieId = req.body.movieId;
-  const userId = req.body.userId;
 
-  const catalog = await getUserCatalog(userId);
+  const { userId, movieId } = req.body;
+  const user = await findUserById(userId);
+  const catalog = await getUserCatalog(user.id);
+  const movie_id = Number(movieId);
 
   try{
-    await catalogServices.removeMovie(catalog.id, movieId);
+    await catalogServices.removeMovie(catalog.id, movie_id);
     return res.json({status: true, message: 'Movie removed from favorites'});
   }
   catch (err) {
