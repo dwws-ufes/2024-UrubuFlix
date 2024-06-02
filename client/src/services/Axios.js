@@ -18,9 +18,9 @@ export const login = async (email, password) => {
 };
 
 //================ Register =================== //
-export const register = async (username, email, password, confirmPassword) => {
+export const register = async (username, email, password, confirmPassword,isAdmin) => {
   try {
-    const response = await api.post('/register', { username, email, password, confirmPassword });
+    const response = await api.post('/register', { username, email, password, confirmPassword,isAdmin });
     return response.data;
   } 
   catch (error) {

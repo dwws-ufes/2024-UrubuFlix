@@ -3,6 +3,7 @@ import * as genreENUM from "../enum/genreENUM.js";
 import * as movieServices from "./movieServices.js";
 export const createCatalog = async (data) => {
     const { name, genres} = data;
+    console.log(data);
    
     try {
         const catalog = await prisma.catalog.create({

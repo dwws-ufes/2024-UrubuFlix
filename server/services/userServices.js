@@ -310,7 +310,7 @@ export const makeAdmin = async (req, res) => {
     });
 
     if (!user) {
-      return res.json({message: "user not registered"})
+      return {message: "user not registered"}
     }
 
     await prisma.user.update({
@@ -322,7 +322,7 @@ export const makeAdmin = async (req, res) => {
       }
     });
 
-    return res.json({status: true, message: "ok"})
+    return {status: true, message: "ok"}
 
   }catch (err) {
     console.log(err);
@@ -349,7 +349,7 @@ export const removeAdmin = async (req, res) => {
         id: user.id
       },
       data: {
-        isAdmin: false
+        is_admin: false
       }
     });
 

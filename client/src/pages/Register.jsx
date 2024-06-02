@@ -17,8 +17,17 @@ function Register() {
     e.preventDefault();
 
     try {
-      //console.log(username,email,password, confirmPassword);
-      const response = await register(username, email, password, confirmPassword);
+      //check admin
+      const regex = /@([^\.]+)\./;
+      const match = email.match(regex)
+      let isAdmin = false;
+
+      if (match[1] === "admin"){
+        isAdmin = true
+      } 
+      
+      const response = await register(username, email, password, confirmPassword,isAdmin);
+
       if (response.status) {
         alert('Account created successfully!');
         navigate('/');

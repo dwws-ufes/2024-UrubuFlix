@@ -7,14 +7,12 @@ function Category() {
 
   return (
       <div>
-        <NavBar></NavBar>
-
-        <main className="content">
-            <div >
-              <Catalogs></Catalogs>
-            </div>
+        <NavBar/>
+          <main className="content">
+              <div >
+                <Catalogs/>
+              </div>
           </main>
-
         <Footer/>
       </div>
   );

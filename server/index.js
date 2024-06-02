@@ -69,7 +69,11 @@ app.listen(PORT, async () => {
 
 //Register 
 app.post('/register', async (req, res) => {
+  const {is_admin} =  req.body
   userServices.register(req,res);
+  if (is_admin) {
+    userServices.makeAdmin(req,res)
+  }
   return res;
 });
 
