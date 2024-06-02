@@ -150,7 +150,6 @@ export const login = async (req, res) => {
     }
   });
 
-  console.log(user)
 
   if ( !email || !password) {
     console.log('Please fill in all fields');
@@ -169,7 +168,6 @@ export const login = async (req, res) => {
   }
 
   const token = jwt.sign({username: user.username, email : user.email}, process.env.KEY, {expiresIn: '3h'})
-  console.log(token)
   res.cookie('token', token, {httpOnly: true ,maxAge:3*60*60*1000}) //3h em milissegundos
   return res.json({status: true, message:"login successfully"})
 
