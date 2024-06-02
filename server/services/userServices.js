@@ -25,7 +25,8 @@ export const createUser = async (data) => {
     }
     catch (err) {
       console.error('User not created', err);
-      catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
+      const catalog = await catalogServices.findCatalogName(`${username}'s favorites`)
+      await catalogServices.deleteCatalog(catalog.id);
       throw new Error('User not created');
     }
 };
@@ -41,7 +42,7 @@ export const createAdmin = async (data) => {
         email: email,
         username: username,
         password: hashPassword,
-        isAdmin: true,
+        is_admin: true,
         catalog: { connect: { id: catalog.id } }
       },
     });
@@ -50,7 +51,8 @@ export const createAdmin = async (data) => {
   }
   catch (err) {
     console.error('User not created', err);
-    catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
+    const catalog = await catalogServices.findCatalogName(`${username}'s favorites`)
+    await catalogServices.deleteCatalog(catalog.id);
     throw new Error('User not created');
   }
 };
@@ -150,7 +152,6 @@ export const login = async (req, res) => {
     }
   });
 
-  console.log(user)
 
   if ( !email || !password) {
     console.log('Please fill in all fields');
@@ -169,7 +170,6 @@ export const login = async (req, res) => {
   }
 
   const token = jwt.sign({username: user.username, email : user.email}, process.env.KEY, {expiresIn: '3h'})
-  console.log(token)
   res.cookie('token', token, {httpOnly: true ,maxAge:3*60*60*1000}) //3h em milissegundos
   return res.json({status: true, message:"login successfully"})
 
@@ -318,7 +318,7 @@ export const makeAdmin = async (req, res) => {
         id: user.id
       },
       data: {
-        isAdmin: true
+        is_admin: true
       }
     });
 
