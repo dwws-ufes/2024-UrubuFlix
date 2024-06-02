@@ -64,6 +64,23 @@ app.listen(PORT, async () => {
   catch (error) {
     console.error('Error initializing catalogs:', error);
   }
+  try{
+    const email = 'email@email.com' //coloque o email do admin
+    const admin = await userServices.findUserByEmail(email) 
+    if(!admin){
+      const username ='admin'
+      const password = '123' //coloque a senha do admin
+      const data = {username, email, password}
+      await userServices.createAdmin(data)
+      console.log('Admin created')
+    }
+    else{
+      console.log('Admin already exists')
+    }
+  }
+  catch (error) {
+    console.error('Error creating admin:', error);
+  }
 });
 
 

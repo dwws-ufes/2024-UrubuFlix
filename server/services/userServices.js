@@ -25,7 +25,8 @@ export const createUser = async (data) => {
     }
     catch (err) {
       console.error('User not created', err);
-      catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
+      const catalog = await catalogServices.findCatalogName(`${username}'s favorites`)
+      await catalogServices.deleteCatalog(catalog.id);
       throw new Error('User not created');
     }
 };
@@ -41,7 +42,7 @@ export const createAdmin = async (data) => {
         email: email,
         username: username,
         password: hashPassword,
-        isAdmin: true,
+        is_admin: true,
         catalog: { connect: { id: catalog.id } }
       },
     });
@@ -50,7 +51,8 @@ export const createAdmin = async (data) => {
   }
   catch (err) {
     console.error('User not created', err);
-    catalogServices.deleteCatalog(catalogServices.findCatalogName(`${username}'s favorites`));
+    const catalog = await catalogServices.findCatalogName(`${username}'s favorites`)
+    await catalogServices.deleteCatalog(catalog.id);
     throw new Error('User not created');
   }
 };
@@ -316,7 +318,7 @@ export const makeAdmin = async (req, res) => {
         id: user.id
       },
       data: {
-        isAdmin: true
+        is_admin: true
       }
     });
 
@@ -347,7 +349,7 @@ export const removeAdmin = async (req, res) => {
         id: user.id
       },
       data: {
-        isAdmin: false
+        is_admin: false
       }
     });
 
