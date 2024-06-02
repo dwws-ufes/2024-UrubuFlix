@@ -72,7 +72,7 @@ function NavBar() {
           </nav>
           <div className="top-search">
             <div className="content-search">
-              <form className="flex-content" method="post">
+              <form className="flex-content" onSubmit={handleSearch} method="post">
                 <fieldset className="search-bar">
                   <input onChange={(event) => {setSearch(event.target.value)}} value={search}type="text" placeholder="Search for a movie..." alt="Enter a movie to search here" />
                 </fieldset>
