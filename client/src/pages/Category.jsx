@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import NavBar from './NavBar';
 import Footer from './Footer';
 import Catalogs from './Catalogs';
@@ -11,7 +10,7 @@ function Category() {
         <NavBar></NavBar>
 
         <main className="content">
-            <div className='catalogs'>
+            <div >
               <Catalogs></Catalogs>
             </div>
           </main>

@@ -3,13 +3,16 @@ import Films from './Films';
 import NavBar from './NavBar';
 import Footer from './Footer';
 
-
 function Movies() {
 
     return (
         <div>
-          <NavBar></NavBar>
-          <Films></Films>
+          <NavBar/>
+            <main>
+              <div>
+                  <Films/>
+              </div>
+            </main>
           <Footer/>
         </div>
       );
