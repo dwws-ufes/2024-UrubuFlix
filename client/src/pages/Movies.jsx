@@ -1,4 +1,5 @@
 import React from 'react'
+import '../style/Home.css';
 import Films from './Films';
 import NavBar from './NavBar';
 import Footer from './Footer';

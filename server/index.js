@@ -76,7 +76,6 @@ app.post('/register', async (req, res) => {
 //Login 
 app.post('/login', async (req, res) => {
   userServices.login(req,res);
-  console.log(res.message)
   return res;
   
 });
@@ -135,11 +134,22 @@ app.get('/catalogs', async (req, res) => {
   res.json(catalogs);
 });
 
+app.get('/catalogs/:name', async (req, res) => {
+  const name = req.params.name;
+  const catalog = await catalogServices.findCatalogName(name);
+  res.json(catalog);
+});
+
+
+
 
 app.post('/review',userServices.verifyUser, async (req, res) => {
   const { rating, comments, filmId } = req.body;
-  const userId = req.user.id;
-  const data = { userId, movieId: filmId, rating, comments };
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const movieId=Number(filmId);
+
+  const data = { userId, movieId, rating, comments };
 
   try {
     const review = await reviewServices.createReview(data);
@@ -161,6 +171,8 @@ app.get('/reviewid/:id', async (req, res) => {
   return res.json(review);
 });
 
+
+//retorna todas as reviews de um usuario
 app.get('/reviewuser/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -171,7 +183,8 @@ app.get('/reviewuser/:id', async (req, res) => {
   return res.json(reviews);
 });
 
-app.get('/reviewmovie/:id', async (req, res) => {
+//retorna todas as reviews de um filme
+app.get('/reviewMovie/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
     res.status(400).json({ error: 'Invalid movie ID' });
@@ -181,6 +194,76 @@ app.get('/reviewmovie/:id', async (req, res) => {
   return res.json(reviews);
 });
 
+app.delete('/review/',userServices.verifyUser, async (req, res) => {
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const movieId=Number(req.body.movieid);
+
+  const data = {userId, movieId}
+  try {
+    await reviewServices.deleteReview(data);
+    res.json({ status: true, message: 'Review deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).json({ error: 'Error deleting review' });
+  }
+});
+// <---------------------- ROTAS DE USUÁRIOS ------------------>
+app.get('/users', async (req, res) => {
+  const users = await userServices.getAllUsers();
+  res.json(users);
+});
+
+app.get('/users/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid user ID' });
+    return;
+  }
+  const user = await userServices.findUserById(id);
+  res.json(user);
+});
+
+
+app.post('/addFavorite', userServices.verifyUser, async (req, res) => {
+  const movieId = Number(req.body.filmId);
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.addFavorite(req,res);
+})
+
+app.delete('/removeFavorite', userServices.verifyUser, async (req, res) => {
+  const movieId = Number(req.body.filmId);
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  req.body.userId = userId;
+  req.body.movieId = movieId;
+  await userServices.removeFavorite(req,res);
+})
+
+app.get('/favorites/:id', userServices.verifyUser, async (req, res) => {
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const favorites = await userServices.getUserCatalog(userId);
+  res.json(favorites);
+})
+
+app.get('/isFavorite', userServices.verifyUser, async (req, res) => {
+
+  const user = await userServices.findUserByEmail(req.user.email);
+  const userId = user.id;
+  const { movieId } = req.query;
+
+  try {
+    const favorite = await userServices.isFavorite(userId, parseInt(movieId, 10));
+    res.json({ isFavorite: favorite });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error checking favorite status' });
+  }
+});
 // <---------------------- Filter  ------------------>
 app.get('/search', async (req, res) => {
   const movie = req.query.q.toLowerCase()

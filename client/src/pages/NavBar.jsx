@@ -13,7 +13,7 @@ function NavBar() {
   const navigate =  useNavigate()
   const [user, setUser] = useState()
   const [search, setSearch] = useState('');
-  
+  const [showComponent, setShowComponent] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,14 +32,7 @@ function NavBar() {
     fetchUser();
   }, [navigate]);
 
-  function handleLogin(){
-    navigate('/login')
-  }
-  function handleRegister(){
-    navigate('/register')
-  }
 
-  
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -50,7 +43,6 @@ function NavBar() {
       console.log(error);
     }
   }
-  
   
 
 
@@ -90,16 +82,6 @@ function NavBar() {
             <User/>
          : 
         <div className="top-right">
-          <div className="sublogin">
-            <div>
-              <button className="subloginbtn">Login <br />or Register <span className="fa fa-caret-down"></span></button>
-            </div>
-            <div className="sublogin-content">
-              <button type="button" title="Login" onClick={handleLogin}>Login</button>
-              <p>or</p>
-              <button type="button" title="Register" onClick={handleRegister}>Register</button>
-            </div>
-          </div>
         </div>
         }
       </header>

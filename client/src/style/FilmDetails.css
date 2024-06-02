@@ -68,3 +68,30 @@
 .text {
   width: 100%;
 }
+
+.reviews {
+  display: right;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.reviews button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+  display: left;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px; /* Ajuste o tamanho da fonte conforme necessário */
+  border-radius: 3px; /* Se quiser bordas arredondadas */
+}
+
+.reviews button:hover {
+  background-color: darkred;
+}

@@ -70,6 +70,18 @@ a:hover {
   justify-content: space-between;
 }
 
+.register-login {
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+}
+
+.register-login button {
+  margin: 0 10px;
+  padding: 10px 20px; /* Aumenta o preenchimento interno do botão */
+  font-size: 1.2em; /* Aumenta o tamanho da fonte do botão */
+}
+
 /* -------------- TOP CONTENT -------------- */
 .top {
   background: rgba(0, 0, 0, 0.85);

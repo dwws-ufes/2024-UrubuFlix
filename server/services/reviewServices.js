@@ -4,16 +4,15 @@ import * as movieServices from "./movieServices.js";
 
 export const createReview = async (data) => {
     const { userId, movieId, rating, comments } = data;
-    try {
-        const user = await userServices.findUserById(userId);
-        const movie_id = Number(movieId);
-        const movie = await movieServices.findMovieById(movie_id);
-        const review = await prisma.review.create({
-            data: {
+    try { 
+        const review = await prisma.review.upsert({
+            where: { user_id_movie_id: { user_id: userId, movie_id: movieId } },
+            update: { rating: rating, comment: comments },
+            create: {
                 rating: rating,
                 comment: comments,
-                user: { connect: { id: user.id } },
-                movie: { connect: { id: movie.id } }
+                user: { connect: { id: userId } },
+                movie: { connect: { id: movieId } },
             },
         });
         return review;
@@ -23,26 +22,25 @@ export const createReview = async (data) => {
     }
 };
 
-export const deleteReview = async (id) => {
+export const deleteReview = async (data) => {
+    const { userId, movieId } = data;
+        
     try {
-        const review = await prisma.review.delete({
-            where: { id: id },
+        await prisma.review.delete({
+            where: { user_id_movie_id: { user_id: userId, movie_id:movieId } }
         });
-        return review;
+        return;
     } catch (err) {
         console.error('Error deleting review', err);
         throw new Error('Error deleting review');
     }
 };
 
-export const findReviewById = async (id) => {
+
+export const findReviewById = async (userId, movieId) => {
     try {
         const review = await prisma.review.findUnique({
-            where: { id: id },
-            include: {
-                user: true,
-                movie: true,
-            },
+           where: { userId_movieId: { userId: userId, movieId: movieId } },
         });
         return review;
     } catch (err) {
@@ -70,7 +68,11 @@ export const findReviewByUser = async (userId) => {
 export const findReviewByMovie = async (movieId) => {
     try {
         const reviews = await prisma.review.findMany({
-            where: { movieId: movieId },
+            where: { movie_id: movieId },
+            include: {
+                user: true,
+                movie: true,
+            },
         });
         return reviews;
     } catch (err) {

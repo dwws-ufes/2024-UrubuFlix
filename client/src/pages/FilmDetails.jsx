@@ -12,9 +12,13 @@ const FilmDetails = () => {
   const [film, setFilm] = useState({});
   const [comments, setComments] = useState(''); // Alterado para string vazia
   const [rating, setRating] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [user, setUser] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   Axios.defaults.withCredentials = true;
 
+  //pega as informações do filme
   useEffect(() => {
     Axios.get(`http://localhost:3002/films/${id}`)
       .then((res) => {
@@ -27,6 +31,43 @@ const FilmDetails = () => {
       .catch(error => console.log('Error:', error));
   }, [id]);
 
+  //verifica se o usuário está logado e pega as informações do usuário
+  useEffect(() => {
+    Axios.get('http://localhost:3002/verify', {
+      withCredentials: true
+    }
+    ) 
+    .then((res) => {
+      if (res.data) {
+        setUser(res.data);
+        checkIfFavorite(res.data.id);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [id]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await Axios.get(`http://localhost:3002/reviewMovie/${id}`,{
+        withCredentials: true
+      });
+      if (response.data) {
+        setReviews(response.data);
+      } else {
+        console.log('Error fetching reviews:', response.error);
+      }
+    } catch (error) {
+      console.log('Error fetching reviews:', error);
+    }
+  };
+
+
   const handleAddReview = async () => {
   try {
     const review = { rating, comments, filmId: id };
@@ -36,6 +77,7 @@ const FilmDetails = () => {
     .then((res) => {
       if (res.data) {
         setComments(''); // Atualiza o estado dos comentários
+        fetchReviews();
         alert('Review added successfully');
       } else {
         console.log('Error:', res.error);
@@ -51,9 +93,76 @@ const FilmDetails = () => {
     handleAddReview();
   };
 
+  const handleAddFavorites = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.post('http://localhost:3002/addFavorite', { filmId: id }, {
+        withCredentials: true
+      })
+        .then((res) => {
+          if (res.data) {
+            alert('Movie added to favorites');
+            setIsFavorite(true);
+          } else {
+            console.log('Error:', res.error);
+          }
+        })
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  const handleRemoveFavorites = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.delete('http://localhost:3002/removeFavorite', { 
+        data: { filmId: id },
+        withCredentials: true
+      })
+        .then((res) => {
+          if (res.data) {
+            alert('Movie removed from favorites');
+            setIsFavorite(false);
+          } else {
+            console.log('Error:', res.error);
+          }
+        })
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  const handleRemoveReview = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.delete(`http://localhost:3002/review`,
+        {
+          data: {movieid: id},
+          withCredentials: true
+        });
+      fetchReviews();
+      alert('Review removed successfully');
+    } catch (error) {
+      console.log('Error removing review:', error);
+    }
+  };
+
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+
+  const checkIfFavorite = async (userId) => {
+    try {
+      const response = await Axios.get(`http://localhost:3002/isFavorite?movieId=${id}`, {
+        headers: {
+          'Authorization': `Bearer ${userId}`
+        }
+      });
+      setIsFavorite(response.data.isFavorite);
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
 
   return (
     <div className='app'>
@@ -76,7 +185,11 @@ const FilmDetails = () => {
             ).join(', ')
             }</p>
             <p>Synopsis: {film.synopsis}</p>
-            <button className='favorite'>Add to Favorites</button>
+            {isFavorite ? (
+              <button className='favorite' onClick={handleRemoveFavorites}>Remove from Favorites</button>
+            ) : (
+              <button className='favorite' onClick={handleAddFavorites}>Add to Favorites</button>
+            )}
           </div>
         </div>
         <hr />
@@ -104,8 +217,26 @@ const FilmDetails = () => {
               onChange={(event) => setComments(event.target.value)}
               placeholder="Enter your comment here"
             />
-            <button type="submit">Enviar</button>
+            <button type="submit">Send</button>
           </form>
+          <div className='reviews'>
+            <h3>Reviews</h3>
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <div key={review.id} className='review'>
+                  {user && review.userId === user.id && (
+                    <button onClick={handleRemoveReview}>X</button>
+                  )}
+                  <div className='review-content'>
+                    <p><strong>{review.user.username}</strong>: {review.comment}</p>
+                    <p>Rating: {review.rating}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No reviews yet.</p>
+            )}
+          </div>
         </div>
       </div>
       <Footer />
