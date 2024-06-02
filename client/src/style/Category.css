@@ -13,20 +13,6 @@
 .content img:hover {
   transition: .3s;
   -webkit-filter: brightness(120%);
-  filter: brightness(120%);
+  filter: brightness(20%);
 }
 
-
-/* -------------- BASEBOARD -------------- */
-footer {
-  width: 100%;
-  min-width: 320px;
-  height: auto;
-  background: rgba(0, 0, 0, 0.85);
-  font-size: 0.8vmax;
-  text-align: center;
-}
-
-footer div{
-  margin-top: 20px;
-}

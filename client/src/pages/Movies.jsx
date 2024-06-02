@@ -8,15 +8,15 @@ function Movies() {
 
     return (
         <div>
-          <NavBar></NavBar>
-    
-          <main className="main-content">
-            <div className='films'>
-              <Films></Films>
-            </div>
-          </main>
-    
-          <Footer/>
+          <div className='navbar'>
+            <NavBar/>
+          </div>
+            <main className='container'>
+              <Films/>
+            </main>
+          <div className='footer'>
+            <Footer/>
+          </div> 
         </div>
       );
 }

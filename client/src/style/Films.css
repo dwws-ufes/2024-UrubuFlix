@@ -1,18 +1,43 @@
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 13%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  padding-bottom: 8%;
+}
+
+.navbar {
+  top: 0;
+  height: 100px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
 .film-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
-  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
 }
 
 .film-card {
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  width: 200px; 
+  margin: 10px;
   text-align: center;
+  border: 1px solid rgb(148, 184, 211);
 }
 
 .film-card:hover {
