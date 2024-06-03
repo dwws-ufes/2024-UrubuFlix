@@ -15,6 +15,7 @@ export const createReview = async (data) => {
                 movie: { connect: { id: movieId } },
             },
         });
+        await movieServices.updateRating(movieId);
         return review;
     } catch (err) {
         console.error('Review not created', err);
@@ -29,6 +30,7 @@ export const deleteReview = async (data) => {
         await prisma.review.delete({
             where: { user_id_movie_id: { user_id: userId, movie_id:movieId } }
         });
+        await movieServices.updateRating(movieId);
         return;
     } catch (err) {
         console.error('Error deleting review', err);

@@ -27,6 +27,9 @@
   margin-left: 2%;
   margin-top: 2%;
 }
+.paragrafo {
+  margin-top: 10px;
+}
 
 /* Estilo para o cartaz do filme */
 .poster img {
@@ -95,3 +98,4 @@
 .reviews button:hover {
   background-color: darkred;
 }
+
