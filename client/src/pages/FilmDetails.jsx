@@ -184,11 +184,16 @@ const FilmDetails = () => {
       <div className='movie-info'>
         <div className='movie-poster'>
           <div className='poster'>
-            <img src={film.poster} alt={film.name} />
+            <img src={film.poster} alt={film.name} 
+              style={{ 
+                width: '200px', 
+                height: '300px', 
+                objectFit: 'cover' 
+              }}/>
           </div>
           <div className='info-movie'>
             <h2>{film.name}</h2>
-            <p>Release Date: {film.release_date}</p>
+            <p>Release Date: {film.release_date ? new Date(film.release_date).toISOString().split('T')[0] : 'N/A'}</p>
             <p>Duration: {film.duration} min</p>
             <p>Director: {film.director}</p>
             <p>Age rating: {film.age_rating}</p>
@@ -241,7 +246,13 @@ const FilmDetails = () => {
             <h3>Reviews</h3>
             {reviews.length > 0 ? (
               reviews.map((review) => (
-                <div key={review.id} className='review'>
+                <div key={review.id} className='review' 
+                  style={{ 
+                    border: '1px solid #000', 
+                    padding: '10px', 
+                    margin: '10px 0', 
+                    backgroundColor: '#282828' 
+                  }}>
                   {user && review.userId === user.id && (
                     <button onClick={handleRemoveReview}>X</button>
                   )}
