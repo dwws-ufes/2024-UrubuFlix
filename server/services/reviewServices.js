@@ -49,6 +49,17 @@ export const findReviewById = async (userId, movieId) => {
     }
 };
 
+export const getAllReviews = async () => {
+    try {
+      const reviews = await prisma.review.findMany();
+      return reviews;
+    } catch (err) {
+      console.error('Error finding all reviews', err);
+      throw new Error('Error finding all reviews');
+    }
+};
+
+
 export const findReviewByUser = async (userId) => {
     try {
         const reviews = await prisma.review.findMany({

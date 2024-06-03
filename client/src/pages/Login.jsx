@@ -15,10 +15,17 @@ function Login() {
     e.preventDefault();
 
     try {
+      
       const response = await login(email, password);
 
       if (response.status) {
-        navigate('/movies');
+        if (response.admin){
+          navigate('/admin');
+        }
+        else {
+          navigate('/movies');
+        }
+        
       } 
       else if (!response.status && response.message === 'Empty field') {
         alert('Please fill in all fields');

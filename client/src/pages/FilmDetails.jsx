@@ -224,9 +224,9 @@ const FilmDetails = () => {
             {reviews.length > 0 ? (
               reviews.map((review) => (
                 <div key={review.id} className='review'>
-                  {user && review.userId === user.id && (
+                  {user && review.userId === user.id ? 
                     <button onClick={handleRemoveReview}>X</button>
-                  )}
+                   : <p>lll</p>}
                   <div className='review-content'>
                     <p><strong>{review.user.username}</strong>: {review.comment}</p>
                     <p>Rating: {review.rating}</p>

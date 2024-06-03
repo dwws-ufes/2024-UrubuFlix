@@ -17,6 +17,57 @@ export const login = async (email, password) => {
   }
 };
 
+//================ Admin ================== //
+//-- retrun all Movies
+export const returnAllMovies = async () => {
+  try {
+    const response = await api.get('/films');
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+//-- return all users
+export const returnAllUsers = async () => {
+  try {
+    const response = await api.get('/users');
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+//--  return all reviwes
+export const returnAllReviews = async () => {
+  try {
+    const response = await api.get('/reviews');
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+// --- delete account
+export const deleteAdmAccount = async (id_user) => {
+  try {
+    const response = await api.delete('/admin/delete',{data: {id_user}});
+    return response.data;
+  } 
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
 //================ Register =================== //
 export const register = async (username, email, password, confirmPassword,isAdmin) => {
   try {
@@ -58,7 +109,7 @@ export const resetPassword = async (token, password) => {
 // ====  verify user 
 export const verifyUser = async () => {
   try {
-    const response = await api.get('/verify');
+    const response = await api.get('/verify'); 
     return response.data;
   } 
   catch (error) {

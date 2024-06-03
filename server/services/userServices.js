@@ -171,7 +171,7 @@ export const login = async (req, res) => {
 
   const token = jwt.sign({username: user.username, email : user.email}, process.env.KEY, {expiresIn: '3h'})
   res.cookie('token', token, {httpOnly: true ,maxAge:3*60*60*1000}) //3h em milissegundos
-  return res.json({status: true, message:"login successfully"})
+  return res.json({status: true, message:"login successfully", admin : user.is_admin})
 
 };
 
@@ -186,6 +186,9 @@ export const verifyUser = async (req, res, next) => {
       
       const decoded = jwt.verify(token, process.env.KEY)
       req.user = decoded
+      //verify admin
+      const {is_admin} = await findUserByEmail(req.user.email)
+      req.user.admin = is_admin
       next()
   
     }
@@ -193,7 +196,7 @@ export const verifyUser = async (req, res, next) => {
       console.error("Error verifying token:", err);
       return res.json({status: false, message: "UNAUTHORIZED !!!!!"})
     }
-  };
+};
 
 export const deleteUser = async (req,res) => {
     const token = req.cookies.token;
@@ -407,3 +410,32 @@ export const isFavorite = async (userId, movieId) => {
   });
   return favorite !== null;
 };
+
+//------------- ADMIN -----------------------//
+
+export const removeUserById = async (id_user) => {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { id: id_user },
+    });
+
+    if (!user) {
+      return {status: false, message: "user not exist"}
+    }
+    const idCatalog = user.catalog_id;
+    
+
+    await prisma.user.delete({
+      where: {
+        id:user.id,
+      },
+    });
+    await catalogServices.deleteCatalog(idCatalog);
+    
+    return {status : true, message: 'delete sucess !!!'}
+
+  } catch (err) {
+    console.error('Error finding user by id', err);
+    throw new Error('Error finding user');
+  }
+}

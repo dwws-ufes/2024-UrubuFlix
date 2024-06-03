@@ -65,7 +65,7 @@ app.listen(PORT, async () => {
     console.error('Error initializing catalogs:', error);
   }
   try{
-    const email = 'email@email.com' //coloque o email do admin
+    const email = 'adm@admin.com' //coloque o email do admin
     const admin = await userServices.findUserByEmail(email) 
     if(!admin){
       const username ='admin'
@@ -182,6 +182,11 @@ app.post('/review',userServices.verifyUser, async (req, res) => {
   }
 });
 
+app.get('/reviews', async (req,res) => {
+  const review =  await reviewServices.getAllReviews();
+  return res.json(review); 
+})
+
 app.get('/reviewid/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -294,5 +299,13 @@ app.get('/search', async (req, res) => {
   }
 
   return res.status(400).json({ error: 'Invalid movie' });
+
+})
+
+// delete user by id
+app.delete('/admin/delete', async (req, res) => {
+  const {id_user} = req.body
+  const response = await userServices.removeUserById(id_user);
+  return res.json(response)
 
 })

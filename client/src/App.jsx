@@ -11,6 +11,7 @@ import Movies from  './pages/Movies'
 import Category from './pages/Category'
 import Favorite from './pages/Favorite'
 import Search from './pages/Search'
+import Admin from './pages/Admin'
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
         <Route path='/user' element={<User/>}></Route>
         <Route path='/film/:id' element={<FilmDetails/>}></Route>
         <Route path='/search' element={<Search/>}></Route>
+        <Route path='/admin' element={<Admin/>}></Route>
       </Routes>
     </BrowserRouter>
   )

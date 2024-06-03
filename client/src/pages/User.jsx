@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import '../style/User.css';
 import urubuUser from '../assets/urubu.png'; 
 import { useNavigate } from 'react-router-dom';
-import { verifyUser, logout, deleteAccount } from '../services/Axios';
+import * as axios from '../services/Axios';
 
 const User = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const User = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await verifyUser();
+        const response = await axios.verifyUser();
         if (response.status) {
           setUser(response.user);
         } 
@@ -35,7 +35,7 @@ const User = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await logout();
+      const response = await axios.logout();
       if (response.status) {
         if (window.location.pathname === '/') {
           window.location.reload();
@@ -51,7 +51,7 @@ const User = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete the account?')) {
       try {
-        const response = await deleteAccount();
+        const response = await axios.deleteAccount();
         if (response.status) {
           navigate('/');
         }
