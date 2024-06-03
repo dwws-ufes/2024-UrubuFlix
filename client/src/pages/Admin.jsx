@@ -65,7 +65,7 @@ function Admin() {
                 <ul>
                   {users.map(user => (
                       <li key={user.id}>
-                        {user.id} and {user.username} <button onClick={() => until.deleteUser(user.id)}>X {user.id}</button>
+                        {user.id} and {user.username} <button onClick={() => until.deleteUser(user.id)}>X</button>
                       </li>
                   ))}
                 </ul>
@@ -79,8 +79,8 @@ function Admin() {
               <h2>Review</h2>
                 <ul>
                   {reviews.map(review => (
-                      <li key={review.user_id}>
-                        {review.user_id} and {review.comment} <button onClick={() => until.deleteReview(review.user_id)}>X </button>
+                      <li key={review.movie_id}>
+                        {review.movie_id} and {review.comment} - {review.user_id} <button onClick={() => until.deleteReview(review.movie_id,review.user_id)}>X</button>
                       </li>
                   ))}
                 </ul>

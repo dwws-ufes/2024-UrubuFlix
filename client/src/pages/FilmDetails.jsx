@@ -255,7 +255,7 @@ const FilmDetails = () => {
                   }}>
                   {user && review.userId === user.id && (
                     <button onClick={handleRemoveReview}>X</button>
-                   : <p>lll</p>}
+                  )}
                   <div className='review-content'>
                     <p><strong>{review.user.username}</strong>: {review.comment}</p>
                     <p>Rating: {review.rating}</p>

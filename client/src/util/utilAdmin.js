@@ -41,8 +41,21 @@ export const clickReviews = async (setReviews,setShowList) => {
 
 export const deleteUser = async (id_user) => {
   try {
-    if (window.confirm(`Tem certeza de que deseja excluir sua conta ${id_user}? Esta ação não pode ser desfeita.`)){
+    if (window.confirm(`Are you sure you want to delete this account ? This action cannot be undone.`)){
       await axios.deleteAdmAccount(id_user)
+    }
+  }
+  catch (err){
+    console.log(err);
+  }
+}
+
+export const deleteReview = async (movie_id,user_id) => {
+
+  try {
+    if (window.confirm(`Are you sure you want to delete this review ? This action cannot be undone.`)){
+      
+      await axios.deleteAdmReview(movie_id,user_id)
     }
   }
   catch (err){
