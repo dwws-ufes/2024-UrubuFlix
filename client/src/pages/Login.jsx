@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/urubuflix.png';
 import '../App.css';
 import { login } from '../services/Axios';
+import Footer from './Footer';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -66,6 +67,9 @@ function Login() {
         <p><Link className="link" to='/forgotPassword'>Forgot password ? </Link></p>
         <p><Link className="link" to="/register">Register</Link></p>
       </form>
+      <div className="footer">
+        <Footer/>
+      </div>
     </div>
   );
 }

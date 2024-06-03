@@ -25,9 +25,9 @@ function Favorite() {
 
   if (loading) {
     return (
-      <div className="App">
+      <div>
         <NavBar />
-        <main className="main-content">
+        <main >
           <div className="title">
             <h2>Loading...</h2>
           </div>
@@ -38,27 +38,38 @@ function Favorite() {
   }
 
   return (
-    <div className="App">
-      <NavBar />
-      <main className="main-content">
-        <div className="title">
-          <div className='films' key={catalog.id}>
-            <h2>{catalog.name}</h2>
-            <div className='movie-card' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-              {catalog.catalog_has_movie.map(movieObj => (
-                <div className='film-card' key={movieObj.movie.id}>
-                  <Link to={`/film/${movieObj.movie.id}`} key={movieObj.movie.id}>
-                    <img src={movieObj.movie.poster} alt={movieObj.movie.name} />
-                    <h2>{movieObj.movie.name}</h2>
-                  </Link>
-                </div>
-              ))}
+  <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <NavBar />
+    <main className='content' style={{ flex: 1 }}>
+      <div className="title">
+        <h2>{catalog.name}</h2>
+        <div className='movie-card' 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            flexWrap: 'wrap', 
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          }}>
+          {catalog.catalog_has_movie.map(movieObj => (
+            <div className='film-card' key={movieObj.movie.id}>
+              <Link to={`/film/${movieObj.movie.id}`} key={movieObj.movie.id}>
+                <img src={movieObj.movie.poster} alt={movieObj.movie.name} 
+                  style={{ 
+                    width: '200px', 
+                    height: '300px', 
+                    objectFit: 'cover' 
+                  }} 
+                />
+                <h2>{movieObj.movie.name}</h2>
+              </Link>
             </div>
-          </div>
+          ))}
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </main>
+    <Footer/>
+  </div>
   );
 }
 

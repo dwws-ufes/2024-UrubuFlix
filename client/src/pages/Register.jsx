@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/urubuflix.png';
 import '../App.css';
 import { register } from '../services/Axios';
+import Footer from './Footer';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -79,6 +80,9 @@ function Register() {
         <button type='submit'>Register</button>
         <p>Have an Account? <Link to="/login">Login</Link></p>
       </form>
+      <div className="footer">
+        <Footer/>
+      </div>
     </div>
   );
 }

@@ -20,21 +20,28 @@ function Category() {
 
 return (
     <div className='catalog-grid'>
-        {catalogs.map(catalog => (
-            <div className='films' key={catalog.id}>
-                <h2>{catalog.name}</h2>
-                <div className='movie-card' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {catalog.catalog_has_movie.map(movieObj => (
-                        <div className='film-card' key={movieObj.movie.id}>
-                            <Link to={`/film/${movieObj.movie.id}`} key={movieObj.movie.id}>
-                                <img src={movieObj.movie.poster}  />
-                                <h2>{movieObj.movie.name}</h2>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        ))}
+      {catalogs.map(catalog => (
+        <div className='films' key={catalog.id}>
+          {catalog.catalog_has_movie.length > 0 && <h2>{catalog.name}</h2>}
+          <div className='film-grid'>
+            {catalog.catalog_has_movie.map(movieObj => (
+              <div className='film-card' key={movieObj.movie.id}>
+                <Link to={`/film/${movieObj.movie.id}`} key={movieObj.movie.id}>
+                <img className='film-poster'
+                    src={movieObj.movie.poster} 
+                    style={{ 
+                      width: '200px', 
+                      height: '300px', 
+                      objectFit: 'cover' 
+                    }} 
+                  />
+                    <h2>{movieObj.movie.name}</h2>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
 );
 }
