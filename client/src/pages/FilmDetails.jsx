@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { act, useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
@@ -15,20 +15,13 @@ const FilmDetails = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState({});
   const [reviews, setReviews] = useState([]);
+  const [total_rating, setTotal_rating] = useState(0);
 
   Axios.defaults.withCredentials = true;
 
   //pega as informações do filme
   useEffect(() => {
-    Axios.get(`http://localhost:3002/films/${id}`)
-      .then((res) => {
-        if (res.data) {
-          setFilm(res.data);
-        } else {
-          console.log('Error:', res.error);
-        }
-      })
-      .catch(error => console.log('Error:', error));
+    fetchMovie();
   }, [id]);
 
   //verifica se o usuário está logado e pega as informações do usuário
@@ -51,6 +44,25 @@ const FilmDetails = () => {
   useEffect(() => {
     fetchReviews();
   }, [id]);
+
+  const fetchMovie = async () => {
+    try{
+      Axios.get(`http://localhost:3002/films/${id}`)
+      .then((res) => {
+        if (res.data) {
+          setFilm(res.data);
+          setTotal_rating(res.data.total_rating);
+        } else {
+          console.log('Error:', res.error);
+        }
+      })
+      .catch(error => console.log('Error:', error));
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
+    
+  };
 
   const fetchReviews = async () => {
     try {
@@ -78,6 +90,7 @@ const FilmDetails = () => {
       if (res.data) {
         setComments(''); // Atualiza o estado dos comentários
         fetchReviews();
+        fetchMovie();
         alert('Review added successfully');
       } else {
         console.log('Error:', res.error);
@@ -141,6 +154,7 @@ const FilmDetails = () => {
           withCredentials: true
         });
       fetchReviews();
+      fetchMovie();
       alert('Review removed successfully');
     } catch (error) {
       console.log('Error removing review:', error);
@@ -163,7 +177,7 @@ const FilmDetails = () => {
       console.error('Error checking favorite status:', error);
     }
   };
-
+  
   return (
     <div className='app'>
       <NavBar />
@@ -184,6 +198,10 @@ const FilmDetails = () => {
                   genre.genre.name.toLowerCase()) : ''
             ).join(', ')
             }</p>
+            <div style={{ display: 'flex', alignItems: 'center', paddingLeft:10 }}>
+              <ReactStars count={1} value={1} size={20} activeColor="#ffd700" edit={false} />
+              <p>: {total_rating}</p>
+            </div>
             <p>Synopsis: {film.synopsis}</p>
             {isFavorite ? (
               <button className='favorite' onClick={handleRemoveFavorites}>Remove from Favorites</button>
