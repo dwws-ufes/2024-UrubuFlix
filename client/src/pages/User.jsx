@@ -29,6 +29,10 @@ const User = () => {
     fetchUser();
   }, [navigate]);
 
+  const handleMovieList = () => {
+    navigate('/Favorite');
+  }
+
   const handleChangePassword = () => {
     navigate('/forgotPassword');
   };
@@ -70,19 +74,19 @@ const User = () => {
         />
       <div className="user-profile">
         
-        <h2 className="username">{user.username}</h2>
-        <button className="button" onClick={() => alert('List of films')}>
-          Movie list
-        </button>
-        <button className="button" onClick={handleChangePassword}>
-          Change password
-        </button>
-        <button className="button" onClick={handleLogout}>
-          Logout
-        </button>
-        <button className="delete-button" onClick={handleDeleteAccount}>
-          Delete Account
-        </button>
+        <h2 style={{ color: 'white' }}>{user.username}</h2>
+          <button className="button" onClick={handleMovieList}>
+            Movie list
+          </button>
+          <button className="button" onClick={handleChangePassword}>
+            Change password
+          </button>
+          <button className="button" onClick={handleLogout}>
+            Logout
+          </button>
+          <button className="delete-button" onClick={handleDeleteAccount}>
+            Delete Account
+          </button>
       </div>
     </div>
     
