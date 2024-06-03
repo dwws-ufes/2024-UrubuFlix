@@ -21,7 +21,7 @@ return (
     <div className='catalog-grid'>
       {catalogs.map(catalog => (
         <div className='films' key={catalog.id}>
-          <h2>{catalog.name}</h2>
+          {catalog.catalog_has_movie.length > 0 && <h2>{catalog.name}</h2>}
           <div className='film-grid'>
             {catalog.catalog_has_movie.map(movieObj => (
               <div className='film-card' key={movieObj.movie.id}>
