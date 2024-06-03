@@ -38,19 +38,24 @@ function Admin() {
 
   return (
     <div>
-    <h1>Admin</h1>
-        <button onClick={() => until.clickMovies(setMovies,setShowList)}>Movies</button>
-        <button onClick={() => until.clickUsers(setUsers,setShowList)}>Users</button>
-        <button onClick={() => until.clickReviews(setReviews,setShowList)}>Reviews</button>
+      <div className='header'>
+      <h1>Admin</h1>
+      </div>
+      <div className='buttons'>
+        <button className='btn' onClick={() => until.clickMovies(setMovies,setShowList)}>Movies</button>
+        <button className='btn' onClick={() => until.clickUsers(setUsers,setShowList)}>Users</button>
+        <button className='btn' onClick={() => until.clickReviews(setReviews,setShowList)}>Reviews</button>
+      </div>
 
         {
           showList === 'movies' && (
-            <div>
+            <div className='movies'>
               <h2>Movies</h2>
               <ul>
+              <h3>ID&nbsp;&nbsp;: Name</h3>
                 {movies.map(movie => (
                     <li key={movie.id}>
-                      {movie.id} and {movie.name}
+                      {movie.id} : {movie.name}
                     </li>
                 ))}
               </ul>
@@ -60,9 +65,10 @@ function Admin() {
 
         {
           showList === 'user' && (
-            <div> 
+            <div className='users'> 
               <h2>Users</h2>
                 <ul>
+                <h3>ID&nbsp;&nbsp;: Name</h3>
                   {users.map(user => (
                       <li key={user.id}>
                         {user.id} and {user.username} <button onClick={() => until.deleteUser(user.id)}>X</button>
@@ -75,12 +81,13 @@ function Admin() {
 
         {
           showList === 'review' && (
-            <div> 
+            <div className='review'> 
               <h2>Review</h2>
                 <ul>
+                <h3>Movie ID&nbsp;&nbsp;: Comment - User ID</h3>
                   {reviews.map(review => (
                       <li key={review.movie_id}>
-                        {review.movie_id} and {review.comment} - {review.user_id} <button onClick={() => until.deleteReview(review.movie_id,review.user_id)}>X</button>
+                        {review.movie_id} : {review.comment} - {review.user_id} <button onClick={() => until.deleteReview(review.movie_id,review.user_id)}>X</button>
                       </li>
                   ))}
                 </ul>
