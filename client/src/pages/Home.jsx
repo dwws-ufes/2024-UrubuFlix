@@ -1,12 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import '../style/Home.css';
 import {useNavigate } from 'react-router-dom'
 import NavBar from './NavBar';
 import Footer from './Footer';
+import { verifyUser } from '../services/Axios';
 
 function Home() {
   const navigate =  useNavigate()
+  const [user, setUser] = useState()
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await verifyUser();
+        if (response.status) {
+          setUser(response.user);
+          navigate('/movies');
+        } 
+      } 
+      catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  
   function handleLogin(){
     navigate('/login')
     
