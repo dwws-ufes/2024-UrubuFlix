@@ -6,17 +6,17 @@ import '../style/Category.css';
 function Category() {
 
   return (
-      <div>
-        <NavBar></NavBar>
+    <div>
+      <NavBar></NavBar>
 
-        <main className="content">
-            <div >
-              <Catalogs></Catalogs>
-            </div>
-          </main>
+      <main className="content">
+        <main>
+          <Catalogs></Catalogs>
+        </main>
+      </main>
 
-        <Footer/>
-      </div>
+      <Footer/>
+    </div>
   );
 }
 
