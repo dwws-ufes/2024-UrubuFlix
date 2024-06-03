@@ -24,7 +24,7 @@ function Films() {
           {film.map(film => (
               <div className="film-card" key={film.id}>
                 <Link to={`/film/${film.id}`} key={film.id}>
-                <img src={film.poster} alt={film.name} />
+                <img src={film.poster} alt={film.name} className='film-poster'/>
                 <h2>{film.name}</h2>
                 </Link>
               </div>
