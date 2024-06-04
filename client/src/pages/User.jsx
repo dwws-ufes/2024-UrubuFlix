@@ -68,10 +68,10 @@ const User = () => {
   return (
     <div className='foto-logo'>
       <img
-          src={urubuUser}
-          alt="Profile"
-          className="profile-pic"
-        />
+        src={urubuUser}
+        alt="Profile"
+        className="profile-pic"
+      />
       <div className="user-profile">
         
         <h2 style={{ color: 'white' }}>{user.username}</h2>

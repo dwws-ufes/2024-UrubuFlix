@@ -18,7 +18,7 @@ function Category() {
     })
   },[])
 
-return (
+  return (
     <div className='catalog-grid'>
       {catalogs.map(catalog => (
         <div className='films' key={catalog.id}>
@@ -28,14 +28,14 @@ return (
               <div className='film-card' key={movieObj.movie.id}>
                 <Link to={`/film/${movieObj.movie.id}`} key={movieObj.movie.id}>
                 <img className='film-poster'
-                    src={movieObj.movie.poster} 
-                    style={{ 
-                      width: '200px', 
-                      height: '300px', 
-                      objectFit: 'cover' 
-                    }} 
+                  src={movieObj.movie.poster} 
+                  style={{ 
+                    width: '200px', 
+                    height: '300px', 
+                    objectFit: 'cover' 
+                  }} 
                   />
-                    <h2>{movieObj.movie.name}</h2>
+                  <h2>{movieObj.movie.name}</h2>
                 </Link>
               </div>
             ))}
@@ -43,7 +43,7 @@ return (
         </div>
       ))}
     </div>
-);
+  );
 }
 
 export default Category;

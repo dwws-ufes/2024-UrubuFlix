@@ -14,7 +14,6 @@ function Movies() {
             <main className='container'>
               <Films/>
             </main>
-
             <Footer/>
         </div>
       );

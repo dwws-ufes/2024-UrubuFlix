@@ -48,43 +48,47 @@ function NavBar() {
 
   return (
     <header className="top flex-content">
-        <div className="top-left flex-content">
-          <div className="top-logo">
-            <img src={logo} alt="UrubuFlix logo" title="UrubuFlix logo" />
-          </div>
+      <div className="top-left flex-content">
+        <div className="top-logo">
+          <img src={logo} alt="UrubuFlix logo" title="UrubuFlix logo" />
         </div>
-        <div className="top-center flex-content">
-          <nav>
-            <ul className="top-menu flex-content">
-              {user ? <p></p> : <li><Link to='/'>Home</Link></li>}
-              <li><Link to='/movies'>Movies</Link></li>
-              <li><Link to='/category'>Category</Link></li>
-              {user ? <li><Link to='/favorite'>Favorite</Link></li> : <p></p>}
-            </ul>
-          </nav>
-          <div className="top-search">
-            <div className="content-search">
-              <form className="flex-content" onSubmit={handleSearch} method="post">
-                <fieldset className="search-bar">
-                  <input onChange={(event) => {setSearch(event.target.value)}} value={search}type="text" placeholder="Search for a movie..." alt="Enter a movie to search here" />
-                </fieldset>
-                <fieldset className="flex-content">
+      </div>
+      <div className="top-center flex-content">
+        <nav>
+          <ul className="top-menu flex-content">
+            {user ? <p></p> : <li><Link to='/'>Home</Link></li>}
+            <li><Link to='/movies'>Movies</Link></li>
+            <li><Link to='/category'>Category</Link></li>
+            {user ? <li><Link to='/favorite'>Favorite</Link></li> : <p></p>}
+          </ul>
+        </nav>
+        <div className="top-search">
+          <div className="content-search">
+            <form className="flex-content" onSubmit={handleSearch} method="post">
+              <fieldset className="search-bar">
+                <input onChange={(event) => {setSearch(event.target.value)}} 
+                  value={search}type="text" 
+                  placeholder="Search for a movie..." 
+                  alt="Enter a movie to search here" 
+                />
+              </fieldset>
+              <fieldset className="flex-content">
                 <button  onClick={handleSearch} type="button" title="Search" className="search-button">
                   <FontAwesomeIcon icon={faSearch} />
                 </button>
-                </fieldset>
-              </form>
-            </div>
+              </fieldset>
+            </form>
           </div>
         </div>
+      </div>
         
         {user ?
             <User/>
          : 
         <div className="top-right">
-        </div>
+      </div>
         }
-      </header>
+  </header>
   )
 }
 
