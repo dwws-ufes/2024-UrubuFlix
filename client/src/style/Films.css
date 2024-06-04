@@ -37,7 +37,11 @@
   width: 200px; 
   margin: 10px;
   text-align: center;
-  border: 1px solid rgb(148, 184, 211);
+  border: 1px solid white;
+}
+
+.film-card img {
+  max-width: 100%;
 }
 
 .film-card:hover {
