@@ -4,6 +4,7 @@ import {useNavigate } from 'react-router-dom';
 import '../App.css';
 import { forgotPassword } from '../services/Axios';
 import logo from '../assets/urubuflix.png'
+import Footer from './Footer';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -40,6 +41,9 @@ function ForgotPassword() {
         />
         <button type='submit'>Send</button>
       </form>
+      <div className="footer">
+        <Footer/>
+      </div>
     </div>
   );
 }
