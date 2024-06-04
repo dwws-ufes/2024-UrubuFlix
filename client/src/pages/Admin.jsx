@@ -15,12 +15,14 @@ function Admin() {
   const [users, setUsers] = useState([])
   const [reviews, setReviews] = useState([])
   const [showList, setShowList] = useState('')
+  const [admin, setAdmin] = useState([])
 
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await verifyUser();
+        setAdmin(response.user)
         
         if (response.status && response.user.admin == true) {
           navigate('/admin')         
@@ -78,13 +80,19 @@ function Admin() {
                 {users.map(user => (
                   <li key={user.id}>
                     <div className='user-data'>
-                      <span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username}</span>
-                      <button className='edit'>
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </button>
-                      <button className='delete'
-                        onClick={() => until.deleteUser(user.id)}><FontAwesomeIcon icon={faTrash} /> 
-                      </button>
+                      {until.checkingAdmin(user.email, admin.email) ? 
+                       null: 
+                        <>
+                          <span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username }</span>
+                          <button className='edit' onClick={() => until.makeAdmin(user.id)}>
+                            <FontAwesomeIcon icon={faPencilAlt} />
+                          </button>
+                          <button className='delete' onClick={() => until.deleteUser(user.id)}>
+                              <FontAwesomeIcon icon={faTrash} /> 
+                          </button>
+                        </>
+                      }
+                      
                     </div>
                   </li>
                 ))}
@@ -108,7 +116,7 @@ function Admin() {
                       </button>
                       <button className='delete'
                         onClick={() => until.deleteReview(review.movie_id,review.user_id)}>
-                        <FontAwesomeIcon icon={faTrash} onClick={() => until.deleteUser(user.id)} />
+                        <FontAwesomeIcon icon={faTrash} onClick={() => until.deleteUser(review.user_id)} />
                       </button>
 
                     </div>

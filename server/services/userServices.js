@@ -303,17 +303,29 @@ export const resetPassword = async (req, res) => {
 };
 
 export const makeAdmin = async (req, res) => {
-  const {email} = req.body
-
+  console.log(req);
   try {
     const user = await prisma.user.findFirst({
       where: {
-        email:email
+        id:req
       }
     });
 
     if (!user) {
       return {message: "user not registered"}
+    }
+
+    if (user.is_admin == true) {
+      await prisma.user.update({
+        where: {
+          id: user.id
+        },
+        data: {
+          is_admin: false
+        }
+      });
+
+      return {status: false, message: "the account is already admin"}
     }
 
     await prisma.user.update({

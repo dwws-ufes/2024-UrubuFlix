@@ -63,4 +63,26 @@ export const deleteReview = async (movie_id,user_id) => {
   }
 }
 
+export const makeAdmin = async (user_id ) => {
+  try {
+    const response = await axios.makeUserAdmin(user_id)
+    if (response.status){
+      alert(`User ${user_id} is Admin now !!!`)
+    }else {
+      alert(`the User ${user_id} is no longer an administrator!!!`)
+    }
+    
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+export const checkingAdmin = (email, emailAdm ) => {
+  console.log(email,emailAdm);
+  if (email === emailAdm){
+    return true
+  }
+  return false
+}
 

@@ -315,6 +315,13 @@ app.delete('/admin/deleteReview', async (req, res) => {
   const {movie_id, user_id} = req.body
   console.log(movie_id,user_id);
   const response = await reviewServices.deleteReview({movie_id, user_id});
-  //return res.json(response)
+  return res.json(response)
 
+})
+
+//update user for admin
+app.put('/admin/updateAdmin', async (req, res) => {
+  const {data} = req.body
+  const response =  await userServices.makeAdmin(data.user_id)
+  return res.json(response)
 })

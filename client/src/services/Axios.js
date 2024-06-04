@@ -70,7 +70,6 @@ export const deleteAdmAccount = async (id_user) => {
 //--- delete review 
 export const deleteAdmReview = async (movie_id,user_id) => {
   try {
-    console.log(movie_id,user_id);
     const response = await api.delete('/admin/deleteReview',{data: {movie_id, user_id}});
     return response.data;
   } 
@@ -79,6 +78,18 @@ export const deleteAdmReview = async (movie_id,user_id) => {
     throw error;
   }
 };
+
+//-- user now admin
+export const makeUserAdmin = async (user_id) => {
+  try {
+    const response =  await api.put('/admin/updateAdmin', {data : {user_id}})
+    return response.data
+  }
+  catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 //================ Register =================== //
 export const register = async (username, email, password, confirmPassword,isAdmin) => {
