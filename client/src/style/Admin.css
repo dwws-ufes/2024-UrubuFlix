@@ -56,6 +56,7 @@
 .film, .user-data, .review-data{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border: 1px solid black;
     padding: 2px;
     margin: 2px;
@@ -69,6 +70,8 @@
     color: white;
     border: 1px solid black;
     padding: 2px;
+    width: 20px;
+    height: 20px;
 }
 
 .delete {
