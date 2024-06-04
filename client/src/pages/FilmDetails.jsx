@@ -6,6 +6,9 @@ import ReactStars from "react-rating-stars-component";
 import NavBar from './NavBar';
 import '../style/FilmDetails.css'
 import Footer from './Footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 const FilmDetails = () => {
   const { id } = useParams();
@@ -246,20 +249,36 @@ const FilmDetails = () => {
             <h3>Reviews</h3>
             {reviews.length > 0 ? (
               reviews.map((review) => (
-                <div key={review.id} className='review' 
+                <div key={review.id} className='review-data' 
                   style={{ 
                     border: '1px solid #000', 
                     padding: '10px', 
                     margin: '10px 0', 
                     backgroundColor: '#282828' 
                   }}>
-                  {user && review.userId === user.id && (
-                    <button onClick={handleRemoveReview}>X</button>
-                  )}
+
                   <div className='review-content'>
                     <p><strong>{review.user.username}</strong>: {review.comment}</p>
-                    <p>Rating: {review.rating}</p>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span>Rating: </span>
+                      <ReactStars
+                        count={5}
+                        value={review.rating}
+                        size={24}
+                        activeColor="#ffd700"
+                        isHalf={true}
+                        edit={false}
+                      />
+                    </div>
                   </div>
+                  {user && review.userId === user.id && (
+                    <><button className='edit' style={{ marginLeft: 'auto' }} >
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </button>
+                    <button className='remove' onClick={handleRemoveReview}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button></>
+                  )}
                 </div>
               ))
             ) : (
