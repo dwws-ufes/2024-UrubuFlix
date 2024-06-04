@@ -8,8 +8,7 @@
   margin: 0 auto;
   text-align: center;
   z-index: 1;
-  
-  
+  padding-top: 10px;
 }
 
 .content img:hover {
@@ -17,4 +16,3 @@
   -webkit-filter: brightness(120%);
   filter: brightness(20%);
 }
-

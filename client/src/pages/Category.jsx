@@ -4,17 +4,12 @@ import Catalogs from './Catalogs';
 import '../style/Category.css';
 
 function Category() {
-
   return (
     <div>
       <NavBar></NavBar>
-
       <main className="content">
-        <main>
           <Catalogs></Catalogs>
-        </main>
       </main>
-
       <Footer/>
     </div>
   );
