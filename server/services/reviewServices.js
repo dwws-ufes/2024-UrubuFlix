@@ -25,11 +25,15 @@ export const createReview = async (data) => {
 
 export const deleteReview = async (data) => {
     const {movie_id, user_id} = data;
-    console.log(movie_id, user_id);
         
     try {
         await prisma.review.delete({
-            where: { user_id_movie_id: { user_id:user_id, movie_id: movie_id  } }
+            where: { 
+                user_id_movie_id: { 
+                    user_id:user_id,
+                    movie_id: movie_id  
+                } 
+            }
         });
         await movieServices.updateRating(movie_id);
         return;
@@ -82,7 +86,9 @@ export const findReviewByUser = async (userId) => {
 export const findReviewByMovie = async (movieId) => {
     try {
         const reviews = await prisma.review.findMany({
-            where: { movie_id: movieId },
+            where: { 
+                movie_id: movieId 
+            },
             include: {
                 user: true,
                 movie: true,

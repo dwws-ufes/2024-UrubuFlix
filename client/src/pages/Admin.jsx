@@ -81,7 +81,7 @@ function Admin() {
                   <li key={user.id}>
                     <div className='user-data'>
                       {until.checkingAdmin(user.email, admin.email) ? 
-                       null: 
+                       <><span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username }</span></>: 
                         <>
                           <span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username }</span>
                           <button className='edit' onClick={() => until.makeAdmin(user.id)}>
@@ -110,13 +110,12 @@ function Admin() {
                 {reviews.map(review => (
                   <li key={review.movie_id}>
                     <div className='review-data'>
-                      <span>{review.movie_id}</span>&nbsp;:&nbsp;<span>{review.comment}</span>&nbsp;:&nbsp;<span>{review.user_id}</span>
+                      <span>({review.movie_id})</span>&nbsp;:&nbsp;<span>{review.comment}</span>&nbsp;:&nbsp;<span>{review.user_id}</span>
                       <button className='edit'>
                         <FontAwesomeIcon icon={faPencilAlt} />
                       </button>
-                      <button className='delete'
-                        onClick={() => until.deleteReview(review.movie_id,review.user_id)}>
-                        <FontAwesomeIcon icon={faTrash} onClick={() => until.deleteUser(review.user_id)} />
+                      <button className='delete' onClick={() => until.deleteReview(review.movie_id,review.user_id)}>
+                        <FontAwesomeIcon icon={faTrash}/>
                       </button>
 
                     </div>

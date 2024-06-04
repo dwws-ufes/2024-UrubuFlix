@@ -269,12 +269,13 @@ export const createFullMovie = async (data) => {
 export const updateRating = async (id) => {
     
     const reviews = await reviewServices.findReviewByMovie(id);
-
-    const rating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
-    
+   
+    const rating  = reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0;
     try {
         const movie = await prisma.movie.update({
-            where: { id: id },
+            where: { 
+                id: id 
+            },
             data: {
                 total_rating: rating,
             },
