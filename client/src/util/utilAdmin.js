@@ -39,6 +39,28 @@ export const clickReviews = async (setReviews,setShowList) => {
   }
 };
 
+
+export const clickEdit =  async (setFlagText) => {
+  setFlagText(true)
+}
+
+export const updateRating = async (setRating,newRating) => {
+  setRating(newRating)
+} 
+
+export const updateReview = async (comments, rating, movie_id) => {
+
+  try {
+    await axios.updateReviewAdm(comments, rating, movie_id)
+    alert('Review refresh !!!! ')
+  }
+  catch (err) {
+    console.log(err);
+  }
+
+}
+
+
 export const deleteUser = async (id_user) => {
   try {
     if (window.confirm(`Are you sure you want to delete this account ? This action cannot be undone.`)){

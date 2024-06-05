@@ -79,6 +79,30 @@ export const deleteAdmReview = async (movie_id,user_id) => {
   }
 };
 
+
+//--- refresh review
+export const refreshAdmReview = async (movie_id,user_id) => {
+  try {
+    const response = await api.upadte('/admin/refreshReview',{data: {movie_id, user_id}});
+    return response.data;
+  } 
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const updateReviewAdm = async (comments, rating, movie_id) => {
+  try {
+    const review = { rating, comments, filmId: movie_id };
+    const response = await api.post('/review',review, { withCredentials: true})
+  }
+  catch (err){
+    console.log(err);
+    throw err;
+  }
+}
+
 //-- user now admin
 export const makeUserAdmin = async (user_id) => {
   try {

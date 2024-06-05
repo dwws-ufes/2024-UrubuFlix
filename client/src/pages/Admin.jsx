@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
-import { verifyUser, logout, deleteAccount } from '../services/Axios';
+import { verifyUser} from '../services/Axios';
 import * as until from '../util/utilAdmin'
-import urubuUser from '../assets/urubu.png'; 
+import ReactStars from 'react-stars';
 import NavBar from './NavBar';
 import '../style/Admin.css'
 
@@ -16,6 +16,9 @@ function Admin() {
   const [reviews, setReviews] = useState([])
   const [showList, setShowList] = useState('')
   const [admin, setAdmin] = useState([])
+  const [flagtext, setFlagText] = useState(false)
+  const [comments,setComments] = useState('');
+  const [rating, setRating] = useState(0)
 
 
   useEffect(() => {
@@ -105,18 +108,35 @@ function Admin() {
           showList === 'review' && (
             <div className='review'> 
               <h2>Reviews</h2>
-              <h3>Movie ID&nbsp;&nbsp;: Comment : User ID</h3>
+              <h3>Movie ID: Comment: User ID: Rating:</h3>
               <ul>
                 {reviews.map(review => (
                   <li key={review.movie_id}>
                     <div className='review-data'>
-                      <span>({review.movie_id})</span>&nbsp;:&nbsp;<span>{review.comment}</span>&nbsp;:&nbsp;<span>{review.user_id}</span>
-                      <button className='edit'>
+                      <span>{review.movie_id}</span>&nbsp;:&nbsp;<span>{review.comment}</span>&nbsp;:&nbsp;<span>{review.user_id}</span>&nbsp;:&nbsp;<span>{review.rating}</span>
+                      <button className='edit' onClick={() => until.clickEdit(setFlagText)}>
                         <FontAwesomeIcon icon={faPencilAlt} />
                       </button>
                       <button className='delete' onClick={() => until.deleteReview(review.movie_id,review.user_id)}>
                         <FontAwesomeIcon icon={faTrash}/>
                       </button>
+                      {
+                        flagtext && (
+                              <div>
+                                <p>Refresh review:</p><br />
+                                <ReactStars count={5} onChange={(newRating) => until.updateRating(setRating,newRating)} size={20} activeColor="#ffd700" />
+                                <form onSubmit={() => until.updateReview(comments, rating,review.movie_id)}>
+                                  <textarea className='text'
+                                    value={comments}
+                                    onChange={(event) => setComments(event.target.value)}
+                                    placeholder="Enter your comment here"
+                                  />
+                                  <button type="submit" onClick={() => until.clickEdit(setFlagText)}>Send</button>
+                                </form>
+                                <br/>
+                              </div>
+                            )
+                      }
 
                     </div>
                   </li>
