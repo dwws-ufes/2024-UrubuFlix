@@ -14,6 +14,7 @@ import * as movieServices from './services/movieServices.js';
 import * as genreENUM from './enum/genreENUM.js';
 import * as reviewServices from './services/reviewServices.js';
 import { exit } from 'process'
+import { log } from 'console'
 
 dotenv.config()
 const app = express()
@@ -323,4 +324,10 @@ app.put('/admin/updateAdmin', async (req, res) => {
   const {data} = req.body
   const response =  await userServices.makeAdmin(data.user_id)
   return res.json(response)
+})
+
+//delete movie admin
+app.delete('/admin/deleteAdmin', async (req, res) => {
+  const {id, reviews} = req.body
+  //console.log(req.body);
 })

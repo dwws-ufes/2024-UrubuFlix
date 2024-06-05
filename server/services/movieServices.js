@@ -199,10 +199,13 @@ export const findMovieByTitle = async (title) => {
     }
 };
 
-export const deleteMovie = async (id) => {
+export const deleteMovie = async (data) => {
+    const {movie_id, user_id} = data
+    await reviewServices.deleteReview(movie_id, user_id)
+
     try {
         const movie = await prisma.movie.delete({
-            where: { id: id },
+            where: { id: movie_id },
         });
         return movie;
     } catch (err) {
@@ -265,6 +268,22 @@ export const createFullMovie = async (data) => {
     }
 };
 
+export const setReviews = async (review) => {
+    //console.log("isso au",review);
+    try {
+        const movie = await prisma.movie.update({
+            where: { id: review.movie_id },
+            data: {
+                reviews: review,
+            },
+        });
+        return movie;
+    } catch (err) {
+        console.error('Error setting movies', err);
+        throw new Error('Error setting movies');
+    }
+
+}
 
 export const updateRating = async (id) => {
     

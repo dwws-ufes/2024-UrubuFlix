@@ -16,6 +16,7 @@ export const createReview = async (data) => {
             },
         });
         await movieServices.updateRating(movieId);
+        await movieServices.setReviews(review,movieId);
         return review;
     } catch (err) {
         console.error('Review not created', err);

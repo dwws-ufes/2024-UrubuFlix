@@ -39,6 +39,14 @@ export const clickReviews = async (setReviews,setShowList) => {
   }
 };
 
+export const deleteMovie = async (id, reviews) => {
+  try {
+    const response =  await axios.deleteMovieAdm(id, reviews)
+  }
+  catch (err){
+    console.log(err);
+  }
+}
 
 export const clickEdit =  async (setFlagText) => {
   setFlagText(true)
