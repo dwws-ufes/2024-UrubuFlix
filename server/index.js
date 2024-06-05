@@ -328,6 +328,6 @@ app.put('/admin/updateAdmin', async (req, res) => {
 
 //delete movie admin
 app.delete('/admin/deleteAdmin', async (req, res) => {
-  const {id, reviews} = req.body
-  //console.log(req.body);
+  const {id} = req.body
+  await movieServices.deleteMovie(id)
 })

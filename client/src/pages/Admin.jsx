@@ -65,10 +65,14 @@ function Admin() {
                 {movies.map(movie => (
                   <li key={movie.id}>
                     <div className='film'>
-                      {movie.id} : {movie.name} {movie.reviews}
-                      <button className='delete' onClick={() => until.deleteMovie(movie.id, movie.reviews)}>
+                      {movie.id} : {movie.name} 
+                      <button className='edit' onClick={() => until.makeAdmin(user.id)}>
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                      </button>
+                      <button className='delete' onClick={() => until.deleteMovie(movie.id)}>
                         <FontAwesomeIcon icon={faTrash} /> 
                       </button>
+                      
                     </div>
                   </li>
                 ))}

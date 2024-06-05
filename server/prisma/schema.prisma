@@ -43,7 +43,7 @@ model catalog_has_movie {
 
 model movie {
   id                 Int                  @id @default(autoincrement())
-  name               String               @db.VarChar(45)
+  name               String               @db.VarChar(255)
   synopsis           String?              @db.Text
   total_rating       Int
   age_rating         Int?

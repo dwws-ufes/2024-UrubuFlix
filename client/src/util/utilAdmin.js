@@ -39,9 +39,9 @@ export const clickReviews = async (setReviews,setShowList) => {
   }
 };
 
-export const deleteMovie = async (id, reviews) => {
+export const deleteMovie = async (id) => {
   try {
-    const response =  await axios.deleteMovieAdm(id, reviews)
+    await axios.deleteMovieAdm(id)
   }
   catch (err){
     console.log(err);

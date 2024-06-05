@@ -55,10 +55,9 @@ export const returnAllReviews = async () => {
 }
 
 //--- delete movie 
-export const deleteMovieAdm = async (id, reviews) => {
+export const deleteMovieAdm = async (id) => {
   try {
-    const response = await api.delete('/admin/deleteAdmin', {data : {id,reviews}});
-    return response.data;
+   await api.delete('/admin/deleteAdmin', {data : {id}});
   } 
   catch (error) {
     console.log(error);

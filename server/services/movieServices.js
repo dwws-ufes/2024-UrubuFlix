@@ -200,14 +200,11 @@ export const findMovieByTitle = async (title) => {
 };
 
 export const deleteMovie = async (data) => {
-    const {movie_id, user_id} = data
-    await reviewServices.deleteReview(movie_id, user_id)
-
     try {
-        const movie = await prisma.movie.delete({
-            where: { id: movie_id },
+        await prisma.movie.delete({
+            where: { id: data },
         });
-        return movie;
+
     } catch (err) {
         console.error('Error deleting movie', err);
         throw new Error('Error deleting movie');
@@ -269,7 +266,7 @@ export const createFullMovie = async (data) => {
 };
 
 export const setReviews = async (review) => {
-    //console.log("isso au",review);
+    console.log("isso au",review);
     try {
         const movie = await prisma.movie.update({
             where: { id: review.movie_id },
