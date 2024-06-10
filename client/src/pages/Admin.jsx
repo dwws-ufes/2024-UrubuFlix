@@ -123,7 +123,14 @@ function Admin() {
                   <button className='add' onClick={() =>{setShowModalAdd(true);}}><FontAwesomeIcon icon={faAdd}/></button>
                 </h3>
                 <Modal isOpen={showModalAdd} setModalOpen={() => {setShowModalAdd(!showModalAdd);cleanStateMovie();}}>
-                  <div className='modal'>
+                  <div className='modal' style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}>
                     <h2>Create a new movie!</h2>
                     <form onSubmit={(e) => { e.preventDefault(); createMovie(); }}>
                     <input type='text' placeholder='Enter  movie name' value={movieName} onChange={e => setMovieName(e.target.value)} />
@@ -135,7 +142,12 @@ function Admin() {
                     <input type='text' placeholder='Enter  movie director' value={movieDirector} onChange={e => setMovieDirector(e.target.value)} />
                     <input type='text' placeholder='Enter  movie age_rating' value={movieAgeRating} onChange={e => setMovieAgeRating(e.target.value)} />
                     <input type='text' placeholder='Enter movie trailer' value={movieTrailer} onChange={e => setMovieTrailer(e.target.value)} />
-                    <button type='submit'>Create</button>
+                    <button type='submit' style={{
+                      width: '100px',
+                      height: '30px',
+                      display: 'block',
+                      margin: 'auto',
+                    }}>Create</button>
                     </form>
                   </div>
                 </Modal>
