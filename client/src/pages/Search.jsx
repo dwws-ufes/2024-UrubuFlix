@@ -25,7 +25,12 @@ function Search() {
           movies.map(film => (
             <div className="film-card" key={film.id} style={{ margin: '10px' }}>
               <Link to={`/film/${film.id}`} key={film.id}>
-                <img src={film.poster} alt={film.name} />
+                <img src={film.poster} alt={film.name} 
+                  style={{ 
+                    width: '200px', 
+                    height: '300px', 
+                    objectFit: 'cover' 
+                  }}  />
                 <h2>{film.name}</h2>
               </Link>
             </div>
