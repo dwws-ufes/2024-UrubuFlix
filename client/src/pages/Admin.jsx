@@ -143,7 +143,7 @@ function Admin() {
                   <li key={movie.id}>
                     <div className='film'>
                       {movie.id} : {movie.name} 
-                      <div className='botoes'>
+                      <div className='buttons'>
                         <button className='edit' onClick={() => {setShowModal(true); setMovieId(movie.id);}}>
                           <FontAwesomeIcon icon={faPencilAlt} />
                         </button>
@@ -188,12 +188,14 @@ function Admin() {
                        <><span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username }</span></>: 
                         <>
                           <span>{user.id}</span>&nbsp;:&nbsp;<span>{user.username }</span>
-                          <button className='edit' onClick={() => until.makeAdmin(user.id)}>
-                            <FontAwesomeIcon icon={faPencilAlt} />
-                          </button>
-                          <button className='delete' onClick={() => until.deleteUser(user.id)}>
-                              <FontAwesomeIcon icon={faTrash} /> 
-                          </button>
+                          <div className='buttons'>
+                            <button className='edit' onClick={() => until.makeAdmin(user.id)}>
+                              <FontAwesomeIcon icon={faPencilAlt} />
+                            </button>
+                            <button className='delete' onClick={() => until.deleteUser(user.id)}>
+                                <FontAwesomeIcon icon={faTrash} /> 
+                            </button>
+                          </div>
                         </>
                       }
                       
