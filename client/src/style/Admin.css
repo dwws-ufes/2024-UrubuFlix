@@ -62,11 +62,6 @@
     margin: 2px;
     background-color: #282828;
 }
-.botoes{
-    display: flexbox;
-    align-items: left;
-    flex-direction:row-reverse;
-}
 .edit, .delete {
     display: flex;
     margin-left: 10px;

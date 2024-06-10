@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 import { verifyUser} from '../services/Axios';
@@ -9,7 +9,6 @@ import ReactStars from 'react-stars';
 import NavBar from './NavBar';
 import Modal from '../util/modal';
 import '../style/Admin.css'
-import { setAgeRating } from '../../../server/services/movieServices';
 
 function Admin() {
   const navigate = useNavigate();
@@ -67,6 +66,7 @@ function Admin() {
       await until.editMovie(movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector)
       alert('Movie edited successfully!')
       setShowModal(false)
+      cleanStateMovie();
     }
     catch (error) {
       alert('Error editing movie!')
@@ -79,6 +79,7 @@ function Admin() {
       await until.createMovie(movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector, movieAgeRating, movieTrailer)
       alert('Movie created successfully!')
       setShowModalAdd(false)
+      cleanStateMovie();
     }
     catch (error) {
       alert('Error creating movie!')
@@ -96,7 +97,7 @@ function Admin() {
     setMovieDuration('');
     setMovieDirector('');
     setMovieId('');
-    setAgeRating('');
+    setMovieAgeRating('');
     setMovieTrailer('');
     setMovie(null);
   }
@@ -119,22 +120,22 @@ function Admin() {
               <ul>
                 <h3>
                   MovieId : MovieName
-                  <button className='add' onClick={() =>{setShowModalAdd(true);}}></button>
+                  <button className='add' onClick={() =>{setShowModalAdd(true);}}><FontAwesomeIcon icon={faAdd}/></button>
                 </h3>
                 <Modal isOpen={showModalAdd} setModalOpen={() => {setShowModalAdd(!showModalAdd);cleanStateMovie();}}>
                   <div className='modal'>
                     <h2>Create a new movie!</h2>
                     <form onSubmit={(e) => { e.preventDefault(); createMovie(); }}>
-                    <input type='text' placeholder='Enter new movie name' value={movieName} onChange={e => setMovieName(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie image' value={movieImage} onChange={e => setMovieImage(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie description' value={movieDescription} onChange={e => setMovieDescription(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie genre' value={movieGenre} onChange={e => setMovieGenre(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie year' value={movieYear} onChange={e => setMovieYear(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie duration' value={movieDuration} onChange={e => setMovieDuration(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie director' value={movieDirector} onChange={e => setMovieDirector(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie age_rating' value={movieDirector} onChange={e => setMovieAgeRating(e.target.value)} />
-                    <input type='text' placeholder='Enter new movie trailer' value={movieDirector} onChange={e => setMovieTrailer(e.target.value)} />
-                    <button type='submit'>Edit</button>
+                    <input type='text' placeholder='Enter  movie name' value={movieName} onChange={e => setMovieName(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie image' value={movieImage} onChange={e => setMovieImage(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie description' value={movieDescription} onChange={e => setMovieDescription(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie genre' value={movieGenre} onChange={e => setMovieGenre(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie year' value={movieYear} onChange={e => setMovieYear(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie duration' value={movieDuration} onChange={e => setMovieDuration(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie director' value={movieDirector} onChange={e => setMovieDirector(e.target.value)} />
+                    <input type='text' placeholder='Enter  movie age_rating' value={movieAgeRating} onChange={e => setMovieAgeRating(e.target.value)} />
+                    <input type='text' placeholder='Enter movie trailer' value={movieTrailer} onChange={e => setMovieTrailer(e.target.value)} />
+                    <button type='submit'>Create</button>
                     </form>
                   </div>
                 </Modal>

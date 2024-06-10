@@ -135,17 +135,20 @@ app.delete('/delete', async (req, res) => {
 // <---------------------- ROTAS DE FILMES E CATÁLOGOS ---------------------->
 app.post('/films', async (req, res) => {
   const {movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer} = req.body;
-  const name = movieName;
-  const genres = movieGenre;
-  const synopsis = movieDescription;
-  const total_rating = 0;
-  const age_rating = movieAgeRating;
-  const trailer = movieTrailer;
-  const release_date = movieYear;
-  const director = movieDirector;
-  const duration = movieDuration;
-  const poster = movieImage;
-  const movie = await movieServices.createFullMovie(name, genres, synopsis, total_rating, age_rating, trailer, release_date, director, duration, poster);
+  const data = {
+    name: movieName,
+    genres: [movieGenre],
+    synopsis: movieDescription,
+    total_rating: 0, // Assuming this is the rating
+    age_rating: movieAgeRating,
+    trailer: movieTrailer,
+    release_date: new Date(movieYear),
+    director: movieDirector,
+    duration: parseInt(movieDuration),
+    poster: movieImage,
+  };
+  console.log(data);
+  const movie = await movieServices.createFullMovie(data);
   res.json(movie);
 });
 
