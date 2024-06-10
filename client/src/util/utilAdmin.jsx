@@ -1,5 +1,5 @@
 import * as axios from '../services/Axios';
-
+import React, { useState } from 'react';
 
 export const clickMovies = async (setMovies,setShowList) => {
 
@@ -33,6 +33,25 @@ export const clickReviews = async (setReviews,setShowList) => {
     const response  = await axios.returnAllReviews();
     setShowList('review')
     setReviews(response)
+  }
+  catch (err){
+    console.log(err);
+  }
+};
+
+export const editMovie = async (movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer) => {
+  
+  try {
+    await axios.editMovie(movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer)
+  }
+  catch (err){
+    console.log(err);
+  }
+};
+
+export const createMovie = async (movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector) => {
+  try {
+    await axios.createMovieAdm(movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector)
   }
   catch (err){
     console.log(err);

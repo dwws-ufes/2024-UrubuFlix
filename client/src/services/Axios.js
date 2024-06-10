@@ -30,6 +30,32 @@ export const returnAllMovies = async () => {
   }
 }
 
+//--- edit movie
+export const editMovie = async (movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector) => {
+  try {
+    const movie = { movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector};
+    const id = movieId;
+    const response = await api.put(`/films/${id}`, movie);
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+//-- create movie
+export const createMovieAdm = async ( movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer) => {
+  try {
+    const movie = { movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer };
+    const response = await api.post('/films', movie);
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 //-- return all users
 export const returnAllUsers = async () => {
   try {

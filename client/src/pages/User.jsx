@@ -37,6 +37,10 @@ const User = () => {
     navigate('/forgotPassword');
   };
 
+  const handleAdmin = () => {
+    navigate('/admin');
+  };
+
   const handleLogout = async () => {
     try {
       const response = await axios.logout();
@@ -81,6 +85,13 @@ const User = () => {
           <button className="button" onClick={handleChangePassword}>
             Change password
           </button>
+
+          {user.admin ? (
+            <button className="button" onClick={handleAdmin}>
+              Admin
+            </button>
+          ) : null}
+
           <button className="button" onClick={handleLogout}>
             Logout
           </button>

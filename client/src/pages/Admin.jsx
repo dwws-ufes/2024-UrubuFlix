@@ -7,7 +7,9 @@ import { verifyUser} from '../services/Axios';
 import * as until from '../util/utilAdmin'
 import ReactStars from 'react-stars';
 import NavBar from './NavBar';
+import Modal from '../util/modal';
 import '../style/Admin.css'
+import { setAgeRating } from '../../../server/services/movieServices';
 
 function Admin() {
   const navigate = useNavigate();
@@ -18,8 +20,21 @@ function Admin() {
   const [admin, setAdmin] = useState([])
   const [flagtext, setFlagText] = useState(false)
   const [comments,setComments] = useState('');
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalAdd, setShowModalAdd] = useState(false);
 
+  const [movieId, setMovieId] = useState('');
+  const [movie, setMovie] = useState(null);
+  const [movieName, setMovieName] = useState('');
+  const [movieImage, setMovieImage] = useState('');
+  const [movieDescription, setMovieDescription] = useState('');
+  const [movieGenre, setMovieGenre] = useState('');
+  const [movieYear, setMovieYear] = useState('');
+  const [movieDuration, setMovieDuration] = useState('');
+  const [movieDirector, setMovieDirector] = useState('');
+  const [movieAgeRating, setMovieAgeRating] = useState('');
+  const [movieTrailer, setMovieTrailer] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,7 +58,48 @@ function Admin() {
     fetchUser();
   }, [navigate]);
 
+  useEffect(() => {
+    setMovie(movies.find(m => m.id === movieId));
+  }, [movieId]);
 
+  const editMovie = async () => {
+    try {
+      await until.editMovie(movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector)
+      alert('Movie edited successfully!')
+      setShowModal(false)
+    }
+    catch (error) {
+      alert('Error editing movie!')
+      console.log(error);
+    }
+  }
+
+  const createMovie = async () => {
+    try {
+      await until.createMovie(movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector, movieAgeRating, movieTrailer)
+      alert('Movie created successfully!')
+      setShowModalAdd(false)
+    }
+    catch (error) {
+      alert('Error creating movie!')
+      console.log(error);
+    }
+  }
+
+
+  const cleanStateMovie = () => {
+    setMovieName('');
+    setMovieImage('');
+    setMovieDescription('');
+    setMovieGenre('');
+    setMovieYear('');
+    setMovieDuration('');
+    setMovieDirector('');
+    setMovieId('');
+    setAgeRating('');
+    setMovieTrailer('');
+    setMovie(null);
+  }
   return (
     <div className='container'>
       <NavBar />
@@ -61,21 +117,58 @@ function Admin() {
             <div className='movies'>
               <h2>Movies</h2>
               <ul>
-                <h3>MovieId : MoveName</h3>
+                <h3>
+                  MovieId : MovieName
+                  <button className='add' onClick={() =>{setShowModalAdd(true);}}></button>
+                </h3>
+                <Modal isOpen={showModalAdd} setModalOpen={() => {setShowModalAdd(!showModalAdd);cleanStateMovie();}}>
+                  <div className='modal'>
+                    <h2>Create a new movie!</h2>
+                    <form onSubmit={(e) => { e.preventDefault(); createMovie(); }}>
+                    <input type='text' placeholder='Enter new movie name' value={movieName} onChange={e => setMovieName(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie image' value={movieImage} onChange={e => setMovieImage(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie description' value={movieDescription} onChange={e => setMovieDescription(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie genre' value={movieGenre} onChange={e => setMovieGenre(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie year' value={movieYear} onChange={e => setMovieYear(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie duration' value={movieDuration} onChange={e => setMovieDuration(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie director' value={movieDirector} onChange={e => setMovieDirector(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie age_rating' value={movieDirector} onChange={e => setMovieAgeRating(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie trailer' value={movieDirector} onChange={e => setMovieTrailer(e.target.value)} />
+                    <button type='submit'>Edit</button>
+                    </form>
+                  </div>
+                </Modal>
                 {movies.map(movie => (
                   <li key={movie.id}>
                     <div className='film'>
                       {movie.id} : {movie.name} 
-                      <button className='edit' onClick={() => until.makeAdmin(user.id)}>
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </button>
-                      <button className='delete' onClick={() => until.deleteMovie(movie.id)}>
-                        <FontAwesomeIcon icon={faTrash} /> 
-                      </button>
-                      
+                      <div className='botoes'>
+                        <button className='edit' onClick={() => {setShowModal(true); setMovieId(movie.id);}}>
+                          <FontAwesomeIcon icon={faPencilAlt} />
+                        </button>
+                        <button className='delete' onClick={() => until.deleteMovie(movie.id)}>
+                          <FontAwesomeIcon icon={faTrash} /> 
+                        </button>
+                      </div>
                     </div>
                   </li>
                 ))}
+
+                <Modal isOpen={showModal} setModalOpen={() => {setShowModal(!showModal); cleanStateMovie();}}>
+                  <div className='modal'>
+                    <h2>Edit Movie: {movie?.name}</h2>
+                    <form onSubmit={(e) => { e.preventDefault(); editMovie(); }}>
+                    <input type='text' placeholder='Enter new movie name' value={movieName} onChange={e => setMovieName(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie image' value={movieImage} onChange={e => setMovieImage(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie description' value={movieDescription} onChange={e => setMovieDescription(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie genre' value={movieGenre} onChange={e => setMovieGenre(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie year' value={movieYear} onChange={e => setMovieYear(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie duration' value={movieDuration} onChange={e => setMovieDuration(e.target.value)} />
+                    <input type='text' placeholder='Enter new movie director' value={movieDirector} onChange={e => setMovieDirector(e.target.value)} />
+                    <button type='submit'>Edit</button>
+                    </form>
+                  </div>
+                </Modal>
               </ul>
             </div>
           )

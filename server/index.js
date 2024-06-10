@@ -15,6 +15,7 @@ import * as genreENUM from './enum/genreENUM.js';
 import * as reviewServices from './services/reviewServices.js';
 import { exit } from 'process'
 import { log } from 'console'
+import { release } from 'os'
 
 dotenv.config()
 const app = express()
@@ -132,6 +133,22 @@ app.delete('/delete', async (req, res) => {
 
 
 // <---------------------- ROTAS DE FILMES E CATÁLOGOS ---------------------->
+app.post('/films', async (req, res) => {
+  const {movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector,movieAgeRating, movieTrailer} = req.body;
+  const name = movieName;
+  const genres = movieGenre;
+  const synopsis = movieDescription;
+  const total_rating = 0;
+  const age_rating = movieAgeRating;
+  const trailer = movieTrailer;
+  const release_date = movieYear;
+  const director = movieDirector;
+  const duration = movieDuration;
+  const poster = movieImage;
+  const movie = await movieServices.createFullMovie(name, genres, synopsis, total_rating, age_rating, trailer, release_date, director, duration, poster);
+  res.json(movie);
+});
+
 app.get('/films', async (req, res) => {
   const movies = await movieServices.getAllMovies();
   res.json(movies);
@@ -148,6 +165,25 @@ app.get('/films/:id', async (req, res) => {
   res.json(movie);
 });
 
+app.put('/films/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid movie ID' });
+    return;
+  }
+  const {
+    movieId,
+    movieName,
+    movieImage,
+    movieDescription,
+    movieGenre,
+    movieYear,
+    movieDuration,
+    movieDirector
+  } = req.body;
+  const movie = await movieServices.updateMovie(movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector);
+  res.json(movie);
+});
 
 
 // <---------------------- ROTAS DE GENEROS (PAGE CATEGORIAS) ------------------>

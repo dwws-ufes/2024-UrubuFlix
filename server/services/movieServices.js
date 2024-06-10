@@ -154,11 +154,12 @@ export const setDirector = async (id, director) => {
 };
 
 export const setDuration = async (id, duration) => {
+    const durationInt = parseInt(duration);
     try {
         const movie = await prisma.movie.update({
             where: { id: id },
             data: {
-                duration: duration,
+                duration: durationInt,
             },
         });
         return movie;
@@ -303,7 +304,58 @@ export const updateRating = async (id) => {
     }
 };
 
+export const setMoviePoster = async (id, poster) => {
+    try {
+        const movie = await prisma.movie.update({
+            where: { id: id },
+            data: {
+                poster: poster,
+            },
+        });
+        return movie;
+    } catch (err) {
+        console.error('Error setting poster', err);
+        throw new Error('Error setting poster');
+    }
+};
+export const updateMovie = async (movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector) => {
+   
+    //console.log(movieId, movieName, movieImage, movieDescription, movieGenre, movieYear, movieDuration, movieDirector);
 
+    // Verifique se movieId está presente
+    if (!movieId) {
+        return { status: false, message: 'Movie ID is required' };
+    }
+
+    try {
+        // Verifique e atualize cada campo individualmente, se fornecido
+        if (movieName && movieName.trim() !== '') {
+            await setName(movieId, movieName);
+        }
+        if (movieImage && movieImage.trim() !== '') {
+            await setMoviePoster(movieId, movieImage);
+        }
+        if (movieDescription && movieDescription.trim() !== '') {
+            await setSynopsis(movieId, movieDescription);
+        }
+        if (movieGenre && Array.isArray(movieGenre) && movieGenre.length > 0) {
+            await setGenres(movieId, movieGenre);
+        }
+        if (movieYear && !isNaN(Date.parse(movieYear))) {
+            await setReleaseDate(movieId, new Date(movieYear));
+        }
+        if (movieDuration && !isNaN(movieDuration) && movieDuration > 0) {
+            await setDuration(movieId, movieDuration);
+        }
+        if (movieDirector && movieDirector.trim() !== '') {
+            await setDirector(movieId, movieDirector);
+        }
+        return { status: true, message: 'Movie updated successfully' };
+    } catch (err) {
+        console.error('Error updating movie', err);
+        return { status: false, message: 'Error updating movie' };
+    }
+};
 
 export const loadMoviesFromJSON = async (filePath) => {
     try {
