@@ -80,7 +80,7 @@ The project includes a data collector script to populate the database with movie
 - This script does not automatically upload movies to the database. It only collects the data and saves it to a JSON file.
 - Sending to the database is performed when starting the server.
 - It is not necessary to run this script to run the web application. A [file](server/script_movies/movies.json) with film data to be inserted into the database has already been made available along with this project.
-- More information about the itinerary can be accessed by [clicking here](server/script_movies/README.md)
+- More information about the itinerary can be accessed by [clicking here](server/script_movies/omdb_version/README.md)
 
 
 Ensure you have the environment properly set up and database configurations to make the application work as expected.
