@@ -9,6 +9,8 @@ import Footer from './Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { Link, useNavigate } from 'react-router-dom'
+
 
 const FilmDetails = () => {
   const { id } = useParams();
@@ -194,6 +196,10 @@ const FilmDetails = () => {
                 objectFit: 'cover' 
               }}/>
           </div>
+          <div className='rdflink' style={{flexDirection: 'row-reverse'}}>
+          <li><Link to={`/Rdfs/${film.id}`}>RDFS</Link></li>
+          </div>
+
           <div className='info-movie'>
             <h2>{film.name}</h2>
             <p>Release Date: {film.release_date ? new Date(film.release_date).toISOString().split('T')[0] : 'N/A'}</p>

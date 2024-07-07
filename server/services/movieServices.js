@@ -2,6 +2,11 @@ import fs from 'fs';
 import prisma from "./prisma.js";
 import * as genreENUM from "../enum/genreENUM.js";
 import * as reviewServices from "./reviewServices.js";
+import { DataFactory } from 'rdf-data-factory';
+import xmlbuilder from 'xmlbuilder';
+
+const dataFactory = new DataFactory();
+
 
 const isValidDate = (dateString) => {
     return !isNaN(Date.parse(dateString));
@@ -473,3 +478,82 @@ export const getMoviesByFilter = async (movie) => {
         throw new Error('Error finding movies');
     } 
 }
+
+export async function createRDFXML(movieID) {
+    const movie = await findMovieById(movieID);
+    const reviews = await reviewServices.findReviewByMovie(movieID);
+
+    const movieNode = dataFactory.namedNode(`http://localhost5173.org/movie/${movie.id}`);
+    const dataset = [];
+
+    
+    dataset.push(dataFactory.quad(movieNode, dataFactory.namedNode('http://purl.org/dc/elements/1.1/title'), dataFactory.literal(movie.name)));
+
+    if (movie.director) {
+    dataset.push(dataFactory.quad(movieNode, dataFactory.namedNode('http://purl.org/dc/elements/1.1/creator'), dataFactory.literal(movie.director)));
+    }
+
+    if (movie.release_date) {
+    dataset.push(dataFactory.quad(movieNode, dataFactory.namedNode('http://purl.org/dc/elements/1.1/date'), dataFactory.literal(movie.release_date.toISOString())));
+    }
+
+    if (movie.duration) {
+    dataset.push(dataFactory.quad(movieNode, dataFactory.namedNode('http://purl.org/dc/elements/1.1/description'), dataFactory.literal(movie.duration.toString())));
+    }
+
+    // Adiciona reviews
+    reviews.forEach((review, index) => {
+    const reviewNode = dataFactory.namedNode(`http://localhost5173.org/review/${movie.id}/${index}`);
+
+    if (review.comment) {
+        dataset.push(dataFactory.quad(reviewNode, dataFactory.namedNode('http://purl.org/stuff/rev#text'), dataFactory.literal(review.comment)));
+    }
+
+    dataset.push(dataFactory.quad(reviewNode, dataFactory.namedNode('http://purl.org/stuff/rev#rating'), dataFactory.literal(review.rating.toString())));
+    dataset.push(dataFactory.quad(reviewNode, dataFactory.namedNode('http://xmlns.com/foaf/0.1/name'), dataFactory.literal(review.user.username)));
+    dataset.push(dataFactory.quad(movieNode, dataFactory.namedNode('http://purl.org/stuff/rev#hasReview'), reviewNode));
+    });
+
+    // Criar o documento RDF usando xmlbuilder
+    const rdf = xmlbuilder.create('rdf:RDF', {
+    version: '1.0',
+    encoding: 'UTF-8'
+    })
+    .att('xmlns:rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+    .att('xmlns:rdfs', 'http://www.w3.org/2000/01/rdf-schema#')
+    .att('xmlns:dc', 'http://purl.org/dc/elements/1.1/')
+    .att('xmlns:foaf', 'http://xmlns.com/foaf/0.1/')
+    .att('xmlns:rev', 'http://purl.org/stuff/rev#');
+
+    // Adicionar o nó do filme
+    const movieDesc = rdf.ele('rdf:Description', { 'rdf:about': movieNode.value });
+    movieDesc.ele('rdf:type', { 'rdf:resource': 'http://schema.org/Movie' });
+    movieDesc.ele('dc:title', movie.name);
+    if (movie.director) {
+    movieDesc.ele('dc:creator', movie.director);
+    }
+    if (movie.release_date) {
+    movieDesc.ele('dc:date', movie.release_date.toISOString());
+    }
+    if (movie.duration) {
+    movieDesc.ele('dc:description', movie.duration.toString());
+    }
+
+    // Adicionar reviews
+    reviews.forEach((review, index) => {
+    const reviewNode = `http://localhost5173.org/review/${movie.id}/${index}`;
+    const reviewDesc = rdf.ele('rdf:Description', { 'rdf:about': reviewNode });
+    reviewDesc.ele('rdf:type', { 'rdf:resource': 'http://schema.org/Review' });
+    if (review.comment) {
+        reviewDesc.ele('rev:text', review.comment);
+    }
+    reviewDesc.ele('rev:rating', review.rating.toString());
+    reviewDesc.ele('foaf:name', review.user.username);
+    movieDesc.ele('rev:hasReview', { 'rdf:resource': reviewNode });
+    });
+
+    // Converter para string XML
+    const rdfXml = rdf.end({ pretty: true });
+    return rdfXml;
+     
+ }

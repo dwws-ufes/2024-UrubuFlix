@@ -188,6 +188,22 @@ app.put('/films/:id', async (req, res) => {
   res.json(movie);
 });
 
+app.get('/rdf/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'Invalid movie ID' });
+    return;
+  }
+  const rdfXml = await movieServices.createRDFXML(id)
+      .then(rdfXml => {
+        res.setHeader('Content-Type', 'application/xml');
+        res.send(rdfXml);
+      })
+      .catch(err => {
+        console.error('Error creating RDF XML:', err)
+      });
+      
+});
 
 // <---------------------- ROTAS DE GENEROS (PAGE CATEGORIAS) ------------------>
 app.get('/catalogs', async (req, res) => {
@@ -370,3 +386,4 @@ app.delete('/admin/deleteAdmin', async (req, res) => {
   const {id} = req.body
   await movieServices.deleteMovie(id)
 })
+

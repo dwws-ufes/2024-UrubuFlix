@@ -12,7 +12,7 @@ import Category from './pages/Category'
 import Favorite from './pages/Favorite'
 import Search from './pages/Search'
 import Admin from './pages/Admin'
-
+import Rdfs from './pages/Rdfs'
 function App() {
 
   return (
@@ -31,6 +31,7 @@ function App() {
         <Route path='/film/:id' element={<FilmDetails/>}></Route>
         <Route path='/search' element={<Search/>}></Route>
         <Route path='/admin' element={<Admin/>}></Route>
+        <Route path='/rdfs/:id' element={<Rdfs/>}></Route>
       </Routes>
     </BrowserRouter>
   )
