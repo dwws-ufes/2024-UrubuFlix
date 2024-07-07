@@ -8,7 +8,7 @@ def start_sparql(endpoint: str) -> dict:
     
     sparql = SPARQLWrapper(endpoint)
     sparql.setQuery("""
-        SELECT ?film ?title ?abstract ?releaseDate ?director ?ageRating ?poster ?rating ?trailer ?genre ?runtime
+        SELECT ?film ?title ?abstract ?releaseDate ?director ?ageRating ?poster ?rating ?trailer ?genreLabel ?runtime
         WHERE {
             ?film a dbo:Film .
             ?film rdfs:label ?title .
@@ -19,7 +19,11 @@ def start_sparql(endpoint: str) -> dict:
             OPTIONAL { ?film dbo:thumbnail ?poster . }
             OPTIONAL { ?film dbo:rating ?rating . }
             OPTIONAL { ?film dbo:trailer ?trailer . }
-            OPTIONAL { ?film dbo:genre ?genre . }
+            OPTIONAL {
+                ?film dbo:genre ?genre .
+                ?genre rdfs:label ?genreLabel .
+                FILTER (lang(?genreLabel) = 'en')
+            }
             OPTIONAL { ?film dbo:runtime ?runtime . }
             FILTER (lang(?title) = 'en') .
             FILTER (lang(?abstract) = 'en') .
@@ -48,7 +52,7 @@ def get_movies(results: dict) -> list:
             "Poster": result.get("poster", {}).get("value", "N/A"),
             "Ratings": result.get("rating", {}).get("value", "N/A"),
             "Trailer": result.get("trailer", {}).get("value", "N/A"),
-            "Genre": result.get("genre", {}).get("value", "N/A"),
+            "Genre": result.get("genreLabel", {}).get("value", "N/A"),
             "Runtime": result.get("runtime", {}).get("value", "N/A")
         }
         movies.append(movie)        
