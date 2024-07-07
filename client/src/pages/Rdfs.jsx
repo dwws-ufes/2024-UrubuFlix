@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from './NavBar';
-import Footer from './Footer';
-import { Link,useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 import  Axios  from 'axios';
 
 const Rdfs = () => {

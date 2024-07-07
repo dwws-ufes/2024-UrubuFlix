@@ -1,4 +1,4 @@
-import React, { act, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
