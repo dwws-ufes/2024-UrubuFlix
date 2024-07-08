@@ -8,28 +8,34 @@ def start_sparql(endpoint: str) -> dict:
     
     sparql = SPARQLWrapper(endpoint)
     sparql.setQuery("""
+        PREFIX dbo: <http://dbpedia.org/ontology/>
+        PREFIX dbp: <http://dbpedia.org/property/>
+        PREFIX dbr: <http://dbpedia.org/resource/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        
         SELECT ?film ?title ?abstract ?releaseDate ?director ?ageRating ?poster ?rating ?trailer ?genreLabel ?runtime
         WHERE {
             ?film a dbo:Film .
             ?film rdfs:label ?title .
+            ?film dbo:genre ?genre .
+            ?film dbo:runtime ?runtime .
+            ?film dbo:director ?director .
             OPTIONAL { ?film dbo:abstract ?abstract . }
             OPTIONAL { ?film dbo:releaseDate ?releaseDate . }
-            OPTIONAL { ?film dbo:director ?director . }
             OPTIONAL { ?film dbo:ageRating ?ageRating . }
             OPTIONAL { ?film dbo:thumbnail ?poster . }
             OPTIONAL { ?film dbo:rating ?rating . }
             OPTIONAL { ?film dbo:trailer ?trailer . }
             OPTIONAL {
-                ?film dbo:genre ?genre .
                 ?genre rdfs:label ?genreLabel .
                 FILTER (lang(?genreLabel) = 'en')
             }
-            OPTIONAL { ?film dbo:runtime ?runtime . }
             FILTER (lang(?title) = 'en') .
             FILTER (lang(?abstract) = 'en') .
             FILTER (?releaseDate >= "2005-01-01"^^xsd:date)
         }
-        LIMIT 100
+        LIMIT 500
     """)
     sparql.setReturnFormat(JSON)
     
@@ -39,31 +45,37 @@ def start_sparql(endpoint: str) -> dict:
 
 
 def get_movies(results: dict) -> list:
-    """Get movies from SPARQL results."""
+    """Get movies from SPARQL results, removing duplicates based on title."""
 
     movies = []
+    seen_titles = set()  # Set for storing previously viewed titles
+
     for result in results["results"]["bindings"]:
-        movie = {
-            "Title": result["title"]["value"],
-            "Plot": result.get("abstract", {}).get("value", "N/A"),
-            "Released": result.get("releaseDate", {}).get("value", "N/A"),
-            "Director": result.get("director", {}).get("value", "N/A"),
-            "Rated": result.get("ageRating", {}).get("value", "N/A"),
-            "Poster": result.get("poster", {}).get("value", "N/A"),
-            "Ratings": result.get("rating", {}).get("value", "N/A"),
-            "Trailer": result.get("trailer", {}).get("value", "N/A"),
-            "Genre": result.get("genreLabel", {}).get("value", "N/A"),
-            "Runtime": result.get("runtime", {}).get("value", "N/A")
-        }
-        movies.append(movie)        
+        title = result["title"]["value"]
+        if title not in seen_titles:  # Verify if the title has already been seen
+            movie = {
+                "Title": title,
+                "Plot": result.get("abstract", {}).get("value", "N/A"),
+                "Released": result.get("releaseDate", {}).get("value", "N/A"),
+                "Director": result.get("director", {}).get("value", "N/A").split('/')[-1].replace('_', ' '),
+                "Rated": result.get("ageRating", {}).get("value", "N/A"),
+                "Poster": result.get("poster", {}).get("value", "N/A"),
+                "Ratings": result.get("rating", {}).get("value", "N/A"),
+                "Trailer": result.get("trailer", {}).get("value", "N/A"),
+                "Genre": result.get("genreLabel", {}).get("value", "N/A"),
+                "Runtime": result.get("runtime", {}).get("value", "N/A").replace('-', '')
+            }
+            movies.append(movie)
+            seen_titles.add(title)  # Add title to the set of seen titles
+
     return movies
 
 
 def save_json(movies: list):
-    """Save data in json file."""
+    """Save data in json file with UTF-8 encoding."""
     
-    with open('movies.json', 'w') as json_file:
-        json.dump(movies, json_file, indent=4)
+    with open('movies.json', 'w', encoding='utf-8') as json_file:
+        json.dump(movies, json_file, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
