@@ -372,7 +372,7 @@ export const loadMoviesFromJSON = async (filePath) => {
 
             // Converta o formato de dados conforme necessário
             const genres = Genre.split(',').map(genre => genre.trim());
-            const ratin = Ratings.length > 0 ? parseFloat(Ratings[0].Value.split('/')[0]) : 0;
+            const ratin = Ratings;
             const rating = ratin > 5 ? ratin/2 : ratin;
             const duration = parseInt(Runtime.split(' ')[0]);
 
@@ -380,7 +380,7 @@ export const loadMoviesFromJSON = async (filePath) => {
                 name: Title,
                 genres: genres,
                 synopsis: Plot,
-                total_rating: rating,
+                total_rating: rating !== 'N/A' ? rating : 0,
                 age_rating: Rated !== 'N/A' ? Rated : null,
                 trailer: Trailer,
                 release_date: new Date(Released),
