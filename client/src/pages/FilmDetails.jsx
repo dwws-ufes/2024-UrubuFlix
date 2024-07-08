@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
-
+import poster from '../assets/posterplaceholder.jpeg'
 
 const FilmDetails = () => {
   const { id } = useParams();
@@ -189,12 +189,16 @@ const FilmDetails = () => {
       <div className='movie-info'>
         <div className='movie-poster'>
           <div className='poster'>
-            <img src={film.poster} alt={film.name} 
+            <img 
+              src={film.poster} 
+              alt={film.name} 
+              onError={(e) => { e.target.onerror = null; e.target.src = poster; }} 
               style={{ 
                 width: '200px', 
                 height: '300px', 
                 objectFit: 'cover' 
-              }}/>
+              }}
+            />
           </div>
           <div className='rdflink' style={{flexDirection: 'row-reverse'}}>
           <li><Link to={`/Rdfs/${film.id}`}>RDFS</Link></li>
